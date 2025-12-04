@@ -62,6 +62,7 @@
                 <div class="filtroC-btn-container">
                     <button type="button" id="btnAbertos" class="filtroC-btn">ABERTOS</button>
                     <button type="button" id="btnFinalizados" class="filtroC-btn">FINALIZADOS</button>
+                    <button type="button" id="btnExcluirTI" class="filtroC-btn">SEM TI</button>
                 </div>
             </div>
 
@@ -592,39 +593,68 @@
         }
 
         function configurarFiltros() {
-            const filtroBtns = Array.from(document.querySelectorAll('.filtroC-btn'));
+            const btnAbertos = document.getElementById("btnAbertos");
+            const btnFinalizados = document.getElementById("btnFinalizados");
+            const btnExcluirTI = document.getElementById("btnExcluirTI");
             const refreshBtn = document.getElementById("refreshBtn");
-            let currentFilter = null;
+
+            let statusFilter = null; // 'aberto', 'finalizado', ou null
+            let excluirTI = false;   // true = excluir TI, false = mostrar todos
 
             function aplicarFiltroAtual() {
                 let listaParaRender = todosChamados;
-                if (currentFilter === "aberto") {
-                    listaParaRender = todosChamados.filter(c => (c.status || "").toLowerCase() === "aberto");
-                } else if (currentFilter === "finalizado") {
-                    listaParaRender = todosChamados.filter(c => (c.status || "").toLowerCase() === "finalizado");
+
+                // Aplica filtro de status (aberto/finalizado)
+                if (statusFilter === "aberto") {
+                    listaParaRender = listaParaRender.filter(c => (c.status || "").toLowerCase() === "aberto");
+                } else if (statusFilter === "finalizado") {
+                    listaParaRender = listaParaRender.filter(c => (c.status || "").toLowerCase() === "finalizado");
                 }
+
+                // Aplica filtro de setor TI (independente do status)
+                if (excluirTI) {
+                    listaParaRender = listaParaRender.filter(c => (c.setor || "").toUpperCase() !== "TI");
+                }
+
                 renderizarTodosChamados(listaParaRender);
             }
 
-            filtroBtns.forEach((btn, idx) => {
+            // Filtros de status (Abertos/Finalizados) - mutuamente exclusivos
+            [btnAbertos, btnFinalizados].forEach((btn) => {
                 btn.addEventListener('click', () => {
-                    const wasActive = btn.classList.contains('active');
-                    filtroBtns.forEach(b => b.classList.remove('active'));
+                    const isAbertos = btn.id === 'btnAbertos';
+                    const novoFiltro = isAbertos ? "aberto" : "finalizado";
 
-                    if (wasActive) { currentFilter = null; }
-                    else {
+                    if (btn.classList.contains('active')) {
+                        btn.classList.remove('active');
+                        statusFilter = null;
+                    } else {
+                        btnAbertos.classList.remove('active');
+                        btnFinalizados.classList.remove('active');
                         btn.classList.add('active');
-                        currentFilter = (idx === 0) ? "aberto" : "finalizado";
+                        statusFilter = novoFiltro;
                     }
                     aplicarFiltroAtual();
                 });
             });
 
+            // Filtro EXCLUIR TI - independente dos outros
+            if (btnExcluirTI) {
+                btnExcluirTI.addEventListener('click', () => {
+                    excluirTI = !excluirTI;
+                    btnExcluirTI.classList.toggle('active', excluirTI);
+                    aplicarFiltroAtual();
+                });
+            }
+
             if (refreshBtn) {
                 refreshBtn.addEventListener('click', () => {
                     document.getElementById("campoPesquisa").value = "";
-                    currentFilter = null;
-                    filtroBtns.forEach(b => b.classList.remove('active'));
+                    statusFilter = null;
+                    excluirTI = false;
+                    btnAbertos.classList.remove('active');
+                    btnFinalizados.classList.remove('active');
+                    btnExcluirTI.classList.remove('active');
                     renderizarTodosChamados(todosChamados);
                 });
             }
@@ -663,7 +693,6 @@
 
                 const termo = campoPesquisa.value.trim().toUpperCase();
 
-                document.querySelectorAll('.filtroC-btn').forEach(b => b.classList.remove('active'));
 
                 const chamados = listaChamados.querySelectorAll(".call-itemAdmin");
                 let resultadosEncontrados = 0;

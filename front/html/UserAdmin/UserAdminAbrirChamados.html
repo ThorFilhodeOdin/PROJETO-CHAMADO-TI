@@ -786,7 +786,6 @@
             }
         }
 
-        // Listener para o popup de detalhes do chamado (garante que ele feche)
         const chamadoPopupOverlay = document.getElementById('chamadoPopupOverlay');
         const closeChamadoPopup = document.getElementById('closeChamadoPopup');
 
@@ -795,7 +794,6 @@
                 if (chamadoPopupOverlay) chamadoPopupOverlay.style.display = 'none';
             });
         }
-        // O fechamento ao clicar fora já está configurado no DOMContentLoaded principal
     </script>
 
     <style>
