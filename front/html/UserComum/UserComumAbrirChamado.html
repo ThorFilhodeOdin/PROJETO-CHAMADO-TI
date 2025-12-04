@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <link rel="icon" type="image/png" href="../../icon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="../../icon/favicon.svg">
+  <link rel="shortcut icon" href="../../icon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../icon/apple-touch-icon.png">
+  <link rel="manifest" href="../../icon/site.webmanifest">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chamados - Visolux TI</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+
+  <header>
+    <img src="../../img/logo-x.png" alt="Logo da visolux" width="40" height="40" class="logo-img">
+    <div class="logo">VISOLUX TI</div>
+    <button class="user-btn" id="userBtn">
+      <img src="../../img/user.png" alt="Logo do User" class="user-icon">
+    </button>
+
+  </header>
+
+
+  <div class="popup-overlay" id="popupOverlay">
+
+    <div class="popupEditarUserComum">
+      <button class="close-btnX" id="closePopup">X</button>
+
+      <h3>Editar Usuário</h3>
+      <input type="number" placeholder="Novo Numero">
+      <input type="password" placeholder="Nova senha">
+      <div>
+        <button class="save-btn" id="alterarUser">Salvar</button>
+        <div class="popup-deslogar">
+          <button class="logout-btn" id="logoutBtn">Encerrar Sessão</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Popup de Detalhes do Chamado -->
+  <div class="popup-overlay" id="chamadoPopupOverlay">
+
+    <div class="popup-detalhes-chamado">
+      <button class="close-btnX" id="closeChamadoPopup">X</button>
+
+      <div class="detalhes-chamado-content">
+
+        <div class="info-chamado-content2">
+
+          <div class="campo-detalhe">
+            <label>Tipo:</label>
+            <input type="text" id="popupTipoServico" value="Internet" readonly>
+          </div>
+
+          <div class="campo-detalhe">
+            <label>Nome:</label>
+            <input type="text" id="popupSolicitante" value="Carlos Silva" readonly>
+          </div>
+
+          <div class="campo-detalhe">
+            <label>Numero:</label>
+            <input type="text" id="popupNumero" value="(11) 98765-4321" readonly>
+          </div>
+
+          <div class="campo-detalhe">
+            <label>Id:</label>
+            <input type="text" id="popupId" value="CH-2024-00158" readonly>
+          </div>
+
+          <div class="campo-detalhe">
+            <label>Setor:</label>
+            <input type="text" id="popupSetor" value="Financeiro" readonly>
+          </div>
+
+          <div class="campo-detalhe">
+            <label>Data:</label>
+            <input type="text" id="popupData" value="15/03/2024" readonly>
+          </div>
+
+          <div class="campo-detalhe">
+            <label>Descrição:</label>
+            <textarea id="popupDescricao"
+              readonly>Internet lenta e instável durante todo o dia, impossibilitando o acesso aos sistemas corporativos.</textarea>
+          </div>
+
+        </div>
+
+        <!--FOTOS (POPUP)-->
+        <div class="campofotoAdmin">
+          <div>
+            <label>Fotos (JPG e PNG)</label>
+            <!-- upload area do POPUP -->
+          </div>
+          <div class="imagens-preview" id="imagensPreviewPopup"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </div>
+
+
+
+  <main>
+
+
+
+    <div class="container1" id="yourCalls">
+      <h2>Seus Chamados</h2>
+      <div class="call-list" id="listaChamados">
+      </div>
+    </div>
+
+
+
+
+    <div class="container2" id="openCall">
+      <h2>ABRIR CHAMADO</h2>
+      <form>
+
+        <div class="campoinfo">
+          <div>
+            <label>Tipo de Chamado:</label>
+            <select name="callType" required>
+              <option value="" disabled selected>Selecione o tipo de problema</option>
+              <option value="Internet">Internet</option>
+              <option value="Impressora">Impressora</option>
+              <option value="Computador">Computador</option>
+              <option value="Sistema">Sistema</option>
+              <option value="Monitor">Celular</option>
+              <option value="Monitor">Monitor</option>
+            </select>
+          </div>
+          <div>
+            <label>Data:</label>
+            <input type="date" name="date" id="dataChamado" required>
+          </div>
+          <div>
+            <label>Descrição:</label>
+            <textarea name="description" placeholder="Descreva a situção com detalhes" required></textarea>
+          </div>
+        </div>
+
+        <div class="campofoto">
+          <div>
+            <label>Fotos (JPG e PNG • Máximo 6)</label>
+            <div class="upload-area" id="uploadAreaForm">
+              <div class="upload-placeholder">
+                <span style="color: blue; cursor: pointer;">📁 Arraste imagens aqui ou clique para selecionar</span>
+                <input type="file" id="fileInputForm" multiple accept="image/*" style="display: none;">
+              </div>
+            </div>
+            <div class="imagens-preview" id="imagensPreviewForm"></div>
+          </div>
+        </div>
+        <button type="submit" id="criar-chamado" class="submit-btn">Enviar Chamado</button>
+      </form>
+    </div>
+
+    <div>
+    </div>
+
+  </main>
+
+  <footer>
+    © 2025 VISOLUX & THOR — Todos os direitos reservados
+  </footer>
+
+
+  <div id="modalImagem" class="modal-imagemAdmin">
+    <span class="fechar-modalAdmin">&times;</span>
+    <div class="modal-navegacaoAdmin">
+      <button class="modal-btn-prev" id="modalPrev">⬅</button>
+      <button class="modal-btn-next" id="modalNext">⮕</button>
+    </div>
+    <div class="modal-contadorAdmin" id="modalContador">1 / 4</div>
+    <img class="conteudo-modalAdmin" id="imagemAmpliada">
+  </div>
+
+
+
+
+  <script>
+    //PEGAR O ID POS LOGIN
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      window.location.href = "../login.html";
+    }
+
+
+
+    const userBtn = document.getElementById('userBtn');
+    const popupOverlay = document.getElementById('popupOverlay');//fundo escuro
+    const closePopup = document.getElementById('closePopup');
+
+    userBtn.addEventListener('click', () => {
+      popupOverlay.style.display = 'flex';
+    });
+
+    closePopup.addEventListener('click', () => {
+      popupOverlay.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {// se clicar fora do pop up ele sai
+      if (e.target === popupOverlay) {
+        popupOverlay.style.display = 'none';
+      }
+    });
+
+
+
+
+
+    //criar coluna meus chaamdos 
+
+    let meusChamados = [];
+    document.addEventListener("DOMContentLoaded", () => {
+      CarregarMeusChamados();
+    });
+
+    async function CarregarMeusChamados() {
+      try {
+        const idUser = localStorage.getItem("userId");
+
+        if (!idUser) {
+          console.error("Nenhum ID encontrado — voltando ao login");
+          window.location.href = "../login.html";
+          return;
+        }
+
+        const response = await fetch(`http://localhost:8001/api/getMeusChamados?idUser=${idUser}`);
+        if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+
+        const data = await response.json();
+
+        if (
+          data.data &&
+          data.data.success === true &&
+          Array.isArray(data.data.data)
+        ) {
+          meusChamados = data.data.data;
+          renderizarChamados(meusChamados);
+        } else {
+          console.error("❌ Formato inválido recebido do backend:", data);
+        }
+
+      } catch (error) {
+        console.error("Erro ao carregar chamados:", error);
+      }
+    }
+    document.querySelector("#openCall form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const idUser = localStorage.getItem("userId");
+      if (!idUser) return alert("Sem ID de usuário — faça login novamente.");
+
+      const form = e.target;
+      const formData = new FormData();
+
+      formData.append("idUser", idUser);
+      formData.append("tipo", form.callType.value);
+      formData.append("descricao", form.description.value);
+
+      const files = document.getElementById("fileInputForm").files;
+      for (let i = 0; i < files.length && i < 6; i++) {
+        formData.append("fotos[]", files[i]);
+      }
+
+      try {
+        const response = await fetch("http://localhost:8001/api/createChamadoComum", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert("Chamado enviado com sucesso!");
+          form.reset();
+          document.getElementById("imagensPreviewForm").innerHTML = "";
+          CarregarMeusChamados();
+
+        } else {
+          alert("❌ Erro ao criar chamado: " + (data.message || "Erro desconhecido"));
+          CarregarMeusChamados();
+
+        }
+
+      } catch (err) {
+        console.error("Erro no fetch:", err);
+        alert("❌ Erro ao conectar com o servidor.");
+      }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function renderizarChamados(chamados) {
+      const lista = document.getElementById("listaChamados");
+      lista.innerHTML = "";
+
+      if (chamados.length === 0) {
+        lista.innerHTML = "<p>Nenhum chamado encontrado.</p>";
+        return;
+      }
+
+      chamados.forEach(c => {
+        const div = document.createElement("div");
+        div.classList.add("call-item");
+        const nomeCompleto = c.nome || "—"; // Pega o nome completo ou "—"
+
+        let nomeAjustado;
+        if (nomeCompleto !== "—") {
+          nomeAjustado = nomeCompleto.split(' ')[0];
+        } else {
+          nomeAjustado = c.numero || "—";
+        }
+
+        const tipo = (c.tipo || "—").toUpperCase();
+        const nomeOuNumero = nomeAjustado.toUpperCase();
+        const setor = (c.setor || "—").toUpperCase();
+        const dataFormatada = formatarDataChamado(c.data);
+
+        div.innerHTML = `
+            <span>${tipo}</span>
+            <span>${nomeOuNumero}</span>
+            <span>${setor}</span>
+            <span>${dataFormatada}</span>
+        `;
+
+        div.addEventListener("click", () => abrirPopupChamado(c));
+        lista.appendChild(div);
+      });
+    }
+    function formatarDataChamado(dataStr) {
+      if (!dataStr) return "—";
+
+      const data = new Date(dataStr);
+      if (isNaN(data.getTime())) return "—";
+
+      return data.toISOString().split("T")[0];
+    }
+
+
+
+
+
+    function abrirPopupChamado(c) {
+      const popup = document.getElementById("chamadoPopupOverlay");
+      document.getElementById("popupTipoServico").value = c.tipo || "—";
+      document.getElementById("popupSolicitante").value = c.nome || "—";
+      document.getElementById("popupNumero").value = c.numero || "—";
+      document.getElementById("popupId").value = c.id || c.id_chamado || "—";
+      document.getElementById("popupSetor").value = c.setor || "—";
+      document.getElementById("popupData").value = formatarDataChamado(c.data) || "—";
+      document.getElementById("popupDescricao").value = c.descricao || "—";
+
+      const box = document.getElementById("imagensPreviewPopup");
+      box.innerHTML = "";
+      const imgs = [];
+      for (let i = 1; i <= 6; i++) {
+        const src = c[`imagem${i}`];
+        if (!src) continue;
+        imgs.push(src);
+        const img = document.createElement("img");
+        img.src = src;
+        img.className = "popup-thumb";
+        img.dataset.index = imgs.length - 1;
+        img.onclick = () => abrirModalImagens(imgs, Number(img.dataset.index));
+        box.appendChild(img);
+      }
+
+      popup.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+    function abrirModalImagens(listaUrls, indexInicial) {
+      modalListaAtual = listaUrls;
+      modalIndexAtual = indexInicial;
+
+
+
+      imagemAmpliada.src = modalListaAtual[modalIndexAtual];
+      modalContador.textContent = `${modalIndexAtual + 1} / ${modalListaAtual.length}`;
+
+      modalImagem.style.display = "block";
+      document.body.style.overflow = "hidden";
+    }
+    document.getElementById("closeChamadoPopup").onclick = () => {
+      document.getElementById("chamadoPopupOverlay").style.display = "none";
+      document.body.style.overflow = "auto";
+      const box = document.getElementById("imagensPreviewPopup");
+      if (box) box.innerHTML = "";
+    };
+
+    window.addEventListener("click", e => {
+      if (e.target && e.target.id === "chamadoPopupOverlay") {
+        document.getElementById("chamadoPopupOverlay").style.display = "none";
+        document.body.style.overflow = "auto";
+        const box = document.getElementById("imagensPreviewPopup");
+        if (box) box.innerHTML = "";
+      }
+    });
+
+
+
+
+
+    //data automatica front
+    const dataInput = document.getElementById('dataChamado');
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    const dataFormatada = `${ano}-${mes}-${dia}`;
+    dataInput.value = dataFormatada;
+    dataInput.readOnly = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function iniciarUploadImagens(config) {
+      const {
+        uploadArea,
+        fileInput,
+        previewContainer
+      } = config;
+
+      function ativarRemocao(container) {
+        container.querySelectorAll(".remover-imagem").forEach(btn => {
+          btn.onclick = () => {
+            btn.parentElement.remove();
+            atualizarModal();
+          };
+        });
+      }
+
+      function criarPreview(src) {
+        const bloco = document.createElement("div");
+        bloco.className = "imagem-preview-item";
+        bloco.innerHTML = `
+            <img src="${src}">
+            <button type="button" class="remover-imagem">×</button>
+        `;
+        return bloco;
+      }
+
+      function processarArquivos(arquivos) {
+        const totalAtual = previewContainer.children.length;
+        const totalNovas = arquivos.length;
+
+        if (totalAtual + totalNovas > 6) {
+          alert("Máximo permitido: 6 imagens.");
+          return;
+        }
+
+        [...arquivos].forEach(file => {
+          if (!file.type.startsWith("image/")) return;
+
+          const reader = new FileReader();
+          reader.onload = e => {
+            const preview = criarPreview(e.target.result);
+            previewContainer.appendChild(preview);
+            ativarRemocao(previewContainer);
+            ativarModalClick(preview.querySelector("img"));
+            atualizarModal();
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      uploadArea.addEventListener("click", () => fileInput.click());
+
+      fileInput.addEventListener("change", e => processarArquivos(e.target.files));
+
+      uploadArea.addEventListener("dragover", e => {
+        e.preventDefault();
+        uploadArea.classList.add("hover");
+      });
+
+      uploadArea.addEventListener("dragleave", () => {
+        uploadArea.classList.remove("hover");
+      });
+
+      uploadArea.addEventListener("drop", e => {
+        e.preventDefault();
+        uploadArea.classList.remove("hover");
+        processarArquivos(e.dataTransfer.files);
+      });
+    }
+
+    const modalImagem = document.getElementById("modalImagem");
+    const imagemAmpliada = document.getElementById("imagemAmpliada");
+    const fecharModal = document.querySelector(".fechar-modalAdmin");
+    const modalPrev = document.getElementById("modalPrev");
+    const modalNext = document.getElementById("modalNext");
+    const modalContador = document.getElementById("modalContador");
+
+    let modalListaAtual = [];
+    let modalIndexAtual = 0;
+
+    function abrirModalContainer(listaImgs, index) {
+      modalListaAtual = listaImgs.map(img => img.src);
+      modalIndexAtual = index;
+
+      imagemAmpliada.src = modalListaAtual[modalIndexAtual];
+      modalContador.textContent = `${modalIndexAtual + 1} / ${modalListaAtual.length}`;
+
+      modalImagem.style.display = "block";
+      document.body.style.overflow = "hidden";
+    }
+
+    function ativarModalNoContainer(previewContainer) {
+      previewContainer.addEventListener("click", e => {
+        if (e.target.tagName === "IMG") {
+          const imagens = [...previewContainer.querySelectorAll("img")];
+          const index = imagens.indexOf(e.target);
+          abrirModalContainer(imagens, index);
+        }
+      });
+    }
+
+    modalNext.onclick = e => {
+      e.stopPropagation();
+      modalIndexAtual = (modalIndexAtual + 1) % modalListaAtual.length;
+      imagemAmpliada.src = modalListaAtual[modalIndexAtual];
+      modalContador.textContent = `${modalIndexAtual + 1} / ${modalListaAtual.length}`;
+    };
+
+    modalPrev.onclick = e => {
+      e.stopPropagation();
+      modalIndexAtual = (modalIndexAtual - 1 + modalListaAtual.length) % modalListaAtual.length;
+      imagemAmpliada.src = modalListaAtual[modalIndexAtual];
+      modalContador.textContent = `${modalIndexAtual + 1} / ${modalListaAtual.length}`;
+    };
+
+    function fecharModalFunc() {
+      modalImagem.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+    fecharModal.onclick = fecharModalFunc;
+    modalImagem.onclick = e => { if (e.target === modalImagem) fecharModalFunc(); };
+    document.addEventListener("keydown", e => { if (e.key === "Escape") fecharModalFunc(); });
+
+
+
+    function iniciarArea(config) {
+      iniciarUploadImagens(config);
+      ativarModalNoContainer(config.previewContainer);
+    }
+
+    iniciarArea({
+      uploadArea: document.getElementById("uploadAreaForm"),
+      fileInput: document.getElementById("fileInputForm"),
+      previewContainer: document.getElementById("imagensPreviewForm")
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //LOGOUT
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      encerrarSessao();
+    });
+
+    function encerrarSessao() {
+      const btn = document.getElementById('logoutBtn');
+      try {
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('userId'); // ✅ adicionado
+        sessionStorage.clear();
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        setTimeout(() => {
+          btn.innerHTML = '✅ Sessão Encerrada';
+          btn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+          setTimeout(() => {
+            window.location.href = '../login.html';
+          }, 1000);
+        }, 500);
+      } catch (error) {
+        console.error('Erro ao encerrar sessão:', error);
+        btn.innerHTML = '❌ Erro ao Sair';
+        btn.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+        setTimeout(() => {
+          window.location.href = '../login.html';
+        }, 1500);
+      }
+    }
+
+
+    //TROCA SENHA E NUMERO
+    document.addEventListener('DOMContentLoaded', () => {
+      const alterarUser = document.getElementById('alterarUser');
+      const popupOverlay = document.getElementById('popupOverlay');
+
+      // Pega o userId do localStorage dentro do DOMContentLoaded
+      const idUser = localStorage.getItem("userId");
+
+      alterarUser.addEventListener('click', () => {
+        const numero = popupOverlay.querySelector('input[placeholder="Novo Numero"]').value.trim();
+        const senha = popupOverlay.querySelector('input[placeholder="Nova senha"]').value.trim();
+
+        if (!numero && !senha) {
+          alert("Preencha pelo menos um campo para atualizar!");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('idUser', idUser); // ✅ agora idUser existe
+        if (numero) formData.append('telefone_user', numero);
+        if (senha) formData.append('senha_user', senha);
+
+        fetch('http://localhost:8001/api/updateUserPopUp', {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Resposta do servidor:', data);
+            if (data.success) {
+              alert('Usuário atualizado com sucesso!');
+            } else {
+              alert('Erro: ' + (data.message || 'Não foi possível atualizar'));
+            }
+          })
+          .catch(err => {
+            console.error('Erro no fetch:', err);
+            alert('Erro ao conectar com o servidor');
+          });
+      });
+    });
+
+
+  </script>
+  <style>
+    .popup-detalhes-chamado {
+      box-shadow: 0 4px 6px #0000008c;
+      border: 2px solid #2432fdab;
+    }
+
+    button.submit-btn {
+      background: #002855;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      transition: background 0.3s;
+      font-weight: 600;
+      width: 140px;
+      height: 40px;
+      /* Volta para o fluxo normal */
+      top: 365px;
+      position: absolute;
+
+      left: 400px;
+    }
+
+    .call-item {
+      display: grid;
+      grid-template-columns: 1fr 0.6fr 1.2fr 100px auto;
+      align-items: center;
+      background: #dadbdd;
+      padding: 12px 15px;
+      border-radius: 8px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+      font-size: 14px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+
+    }
+
+    #imagensPreviewPopup {
+
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #imagensPreviewPopup img.popup-thumb {
+      width: 150px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+
+    /* modal de imagem (ampliada) */
+    #modalImagem .conteudo-modalAdmin,
+    #modalImagem img#imagemAmpliada {
+      max-width: calc(100vw - 80px);
+      max-height: calc(100vh - 120px);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: #f6f8fa;
+      color: #333;
+      overflow: hidden;
+
+    }
+
+
+
+
+    .campo-detalhe {
+      display: flex;
+      flex-direction: column;
+      /* label em cima do input */
+      gap: 5px;
+      width: 50px;
+    }
+
+    .campo-detalhe input,
+    .campo-detalhe textarea {
+      /* ocupa toda a largura da célula do grid */
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+    }
+
+    .campo-detalhe input:read-only {
+      background: #f9fafb;
+      color: #374151;
+      width: 250px;
+    }
+
+    .campo-detalhe textarea:read-only {
+      background: #f9fafb;
+      color: #374151;
+      width: 600px;
+    }
+
+
+
+    .campo-detalhe:last-child {
+      border-bottom: none;
+    }
+
+    .campo-detalhe:last-child {
+      grid-template-columns: 120px 1fr;
+      align-items: start;
+    }
+
+    .campo-detalhe label {
+      font-weight: 600;
+      color: #002855;
+      font-size: 14px;
+      margin: 0;
+      padding-top: 2px;
+    }
+
+    .campo-detalhe span {
+      color: #1a365d;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+      border: solid #747679;
+
+    }
+
+    .campo-detalhe:last-child span {
+      background: white;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      line-height: 1.6;
+      border: solid #747679;
+
+    }
+
+
+    .close-btnX {
+      position: absolute;
+      color: #ff0019;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 28px;
+      font-weight: bold;
+      box-shadow: none;
+      background-color: white;
+    }
+  </style>
+
+</body>
+<script src="../../js/urls-amigaveis.js"></script>
+
+</html>

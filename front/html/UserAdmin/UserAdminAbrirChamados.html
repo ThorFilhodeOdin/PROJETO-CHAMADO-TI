@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <link rel="icon" type="image/png" href="../../icon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="../../icon/favicon.svg">
+    <link rel="shortcut icon" href="../../icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../icon/apple-touch-icon.png">
+    <link rel="manifest" href="../../icon/site.webmanifest">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Visolux TI</title>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+    <header>
+        <img src="../../img/logo-x.png" alt="Logo da visolux" width="40" height="40" class="logo-img">
+        <div class="logo">VISOLUX TI</div>
+        <ul class="nav-links">
+            <li><a href="UserAdminChamados.html">CHAMADOS</a></li>
+            <li><a href="UserAdminAbrirChamados.html">ABRIR CHAMADO</a></li>
+            <li><a href="UserAdminUsuarios.html">USUARIOS</a></li>
+        </ul>
+        <button class="user-btn" id="userBtn">
+            <img src="../../img/user.png" alt="Logo do User" class="user-icon">
+        </button>
+    </header>
+
+
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popupEditarUserComum">
+            <button class="close-btnX" id="closePopup">X</button>
+            <h3>Editar Usuário</h3>
+            <input type="number" placeholder="Novo Numero">
+            <input type="password" placeholder="Nova senha">
+            <div>
+                <button class="save-btn" id="alterarUser">Salvar</button>
+                <div class="popup-deslogar">
+                    <button class="logout-btn" id="logoutBtn">Encerrar Sessão</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Popup de Detalhes do Chamado -->
+    <div class="popup-overlay" id="chamadoPopupOverlay">
+
+        <div class="popup-detalhes-chamado">
+            <button class="close-btnX" id="closeChamadoPopup">X</button>
+
+            <div class="detalhes-chamado-content">
+                <div class="info-chamado-content">
+
+                    <div class="campo-detalhe">
+                        <label>Tipo:</label>
+                        <input type="text" id="popupTipoServico" value="Internet">
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Nome:</label>
+                        <input type="text" id="popupSolicitante" value="Carlos Silva">
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Numero:</label>
+                        <input type="text" id="popupNumero" value="(11) 98765-4321">
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Id:</label>
+                        <input type="text" id="popupId" value="CH-2024-00158">
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Setor:</label>
+                        <input type="text" id="popupSetor" value="Financeiro">
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Data:</label>
+                        <input type="text" id="popupData" value="15/03/2024">
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Descrição:</label>
+                        <textarea
+                            id="popupDescricao">Internet lenta e instável durante todo o dia, impossibilitando o acesso aos sistemas corporativos.</textarea>
+                    </div>
+                </div>
+                <div class="campofotoAdmin">
+                    <div>
+                        <label>Fotos (JPG e PNG • Máximo 6)</label>
+
+                        <div class="upload-areaAdmin" id="uploadAreaPopup">
+                            <div class="upload-placeholder upload-placeholderPopup">
+                                <span style="color: blue; cursor: pointer;">📁 Arraste imagens aqui ou clique para
+                                    selecionar</span>
+                                <input type="file" id="fileInputPopup" name="fotosPopup[]" multiple accept="image/*"
+                                    style="display: none;">
+                            </div>
+                        </div>
+                        <div class="imagens-preview" id="imagensPreviewPopup"></div>
+                    </div>
+                </div>
+                <div class="popup-acoes-chamado">
+                    <button type="button" class="submit-btnAdmin deletar">🗑️ Deletar</button>
+                    <button class="action-btn finalizar-btn" id="finalizarChamadoBtn">Finalizar</button>
+                    <button class="action-btn" id="editarChamadoBtn">Salvar alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <main>
+
+        <div class="container1Admin" id="yourCalls">
+            <div class="titulo-filtros">
+                <h3>CHAMADOS TI</h3>
+                <div class="filtroC-btn-container">
+                    <button type="button" id="btnAbertos" class="filtroC-btn">ABERTOS</button>
+                    <button type="button" id="btnFinalizados" class="filtroC-btn">FINALIZADOS</button>
+                </div>
+            </div>
+
+            <form class="search-bar" id="formPesquisa">
+                <input type="text" id="campoPesquisa" placeholder="Pesquisar por" required>
+
+
+                <button type="submit">🔎</button>
+                <button type="button" id="refreshBtn">🔄</button>
+                <span id="contadorPesquisa" class="contador-pesquisa"></span>
+
+            </form>
+
+            <div class="call-listAdmin" id="listaChamados">
+            </div>
+        </div>
+
+
+        <div class="container2Admin" id="openCall">
+            <h2>ABRIR CHAMADO</h2>
+
+            <form id="formAbrirChamadoAdmin" enctype="multipart/form-data">
+                <div class="campoinfoAdmin">
+                    <div>
+                        <label for="nomeUsuario">Nome:</label>
+                        <input type="text" id="nomeUsuario" name="nomeUsuario">
+                    </div>
+
+                    <div>
+                        <label for="numeroChamado">Número:</label>
+                        <input type="text" id="numeroChamado" name="numeroChamado">
+                    </div>
+                    <div>
+                        <label for="dataChamado">Data:</label>
+                        <input type="date" name="dataChamado" id="dataChamado">
+                    </div>
+                    <div>
+                        <label for="callType">Tipo de Chamado:</label>
+                        <select name="callType" id="callType" required>
+                            <option value="" disabled selected>Selecione o tipo de problema</option>
+                            <option value="Internet">Internet</option>
+                            <option value="Impressora">Impressora</option>
+                            <option value="Computador">Computador</option>
+                            <option value="Sistema">Sistema</option>
+                            <option value="Celular">Celular</option>
+                            <option value="Monitor">Monitor</option>
+                        </select>
+                    </div>
+                    <div class="form-group-setor">
+                        <label for="setor">Setor:</label>
+                        <select id="setor" name="setor" required>
+                            <option value="" disabled selected>Selecione o Setor</option>
+
+                            <option value="TI">TI</option>
+                            <option value="ACRILICO">ACRÍLICO</option>
+                            <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
+                            <option value="ALMOXARIFADO">ALMOXARIFADO</option>
+                            <option value="ALMOXARIFADO_FERRAGENS">ALMOXARIFADO FERRAGENS</option>
+                            <option value="COMERCIAL">COMERCIAL</option>
+                            <option value="COMPRAS">COMPRAS</option>
+                            <option value="ELETRICA">ELÉTRICA</option>
+                            <option value="EMBALAGENS">EMBALAGENS</option>
+                            <option value="EXPEDICAO">EXPEDIÇÃO</option>
+                            <option value="FATURAMENTO">FATURAMENTO</option>
+                            <option value="FINANCEIRO">FINANCEIRO</option>
+                            <option value="FUNILARIA">FUNILARIA</option>
+                            <option value="IMPRESSAO">IMPRESSÃO</option>
+                            <option value="OPERACIONAL">OPERACIONAL</option>
+                            <option value="PCP">PCP</option>
+                            <option value="PELICULA">PELÍCULA</option>
+                            <option value="PINTURA">PINTURA</option>
+                            <option value="PLOTER">PLOTER</option>
+                            <option value="PROCESSOS">PROCESSOS</option>
+                            <option value="PROJETO">PROJETO</option>
+                            <option value="QUALIDADE">QUALIDADE</option>
+                            <option value="RECEPCAO">RECEPÇÃO</option>
+                            <option value="RECORTE">RECORTE</option>
+                            <option value="RH">RH</option>
+                            <option value="SERRALHERIA">SERRALHERIA</option>
+                            <option value="SESMT_OPERACIONAL">SESMT OPERACIONAL</option>
+                            <option value="SEM SETOR">SEM SETOR</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="description">Descrição:</label>
+                        <textarea name="description" id="description" required></textarea>
+                    </div>
+                </div>
+                <div class="campofotoAdmin">
+                    <div>
+                        <label>Fotos (JPG e PNG • Máximo 6)</label>
+
+                        <div class="upload-areaAdmin" id="uploadAreaForm">
+                            <div class="upload-placeholder upload-placeholderForm">
+                                <span style="color: blue; cursor: pointer;">📁 Arraste imagens aqui ou clique para
+                                    selecionar</span>
+                                <input type="file" id="fileInputForm" multiple accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+
+                        <div class="imagens-preview" id="imagensPreviewForm"></div>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">Enviar Chamado</button>
+            </form>
+        </div>
+
+        <div></div>
+
+    </main>
+
+    <footer>
+        © 2025 VISOLUX & THOR — Todos os direitos reservados
+    </footer>
+
+    <div id="modalImagem" class="modal-imagemAdmin">
+        <span class="fechar-modalAdmin">&times;</span>
+        <div class="modal-navegacaoAdmin">
+            <button class="modal-btn-prev" id="modalPrev">⬅</button>
+            <button class="modal-btn-next" id="modalNext">⮕</button>
+        </div>
+        <div class="modal-contadorAdmin" id="modalContador">1 / 4</div>
+        <img class="conteudo-modalAdmin" id="imagemAmpliada">
+    </div>
+
+
+
+    <script>
+        document.body.style.zoom = "97%";
+
+        const API_URL = 'http://localhost:8001/api';
+        let todosChamados = [];
+
+        const modalImagem = document.getElementById("modalImagem");
+        const imagemAmpliada = document.getElementById("imagemAmpliada");
+        const fecharModal = document.querySelector(".fechar-modalAdmin");
+        const modalPrev = document.getElementById("modalPrev");
+        const modalNext = document.getElementById("modalNext");
+        const modalContador = document.getElementById("modalContador");
+
+        let modalListaAtual = [];
+        let modalIndexAtual = 0;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const userId = localStorage.getItem("userId");
+
+            if (!userId) {
+                window.location.href = "../login.html";
+                return;
+            }
+
+            CarregarTodosChamadosTi(userId);
+            configurarPopupUsuario(userId);
+            configurarFiltros();
+            configurarPesquisa();
+
+            document.getElementById('formAbrirChamadoAdmin').addEventListener('submit', abrirNovoChamado);
+
+
+            iniciarArea({
+                uploadArea: document.getElementById("uploadAreaForm"),
+                fileInput: document.getElementById("fileInputForm"),
+                previewContainer: document.getElementById("imagensPreviewForm")
+            });
+
+            ativarModalNoContainer(document.getElementById("imagensPreviewPopup"));
+
+
+            if (fecharModal) fecharModal.onclick = fecharModalFunc;
+            if (modalPrev) modalPrev.onclick = navegarModal.bind(null, -1);
+            if (modalNext) modalNext.onclick = navegarModal.bind(null, 1);
+
+            modalImagem.onclick = e => { if (e.target === modalImagem) fecharModalFunc(); };
+            document.addEventListener("keydown", e => { if (e.key === "Escape") fecharModalFunc(); });
+        });
+
+
+
+        async function CarregarTodosChamadosTi(userId) {
+            try {
+                const response = await fetch(`${API_URL}/CarregarTodosChamadosTi?idUserSession=${userId}`);
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                const data = await response.json();
+                if (data.success && Array.isArray(data.data)) {
+                    todosChamados = data.data;
+                    renderizarTodosChamados(todosChamados);
+                    atualizarPlaceholderContador(todosChamados.length);
+                } else {
+                    console.error("❌ Erro no retorno da API:", data.message || data);
+                }
+            } catch (error) {
+                console.error("Erro ao carregar chamados:", error);
+            }
+        }
+
+        function formatarDataChamado(dataStr) {
+            if (!dataStr) return "—";
+            const data = new Date(dataStr.includes('T') ? dataStr : dataStr + 'T00:00:00');
+            if (isNaN(data.getTime())) return "—";
+            return data.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        }
+
+        function renderizarTodosChamados(chamados) {
+            const lista = document.getElementById("listaChamados");
+            lista.innerHTML = "";
+
+            if (!chamados.length) {
+                lista.innerHTML = "<p>Nenhum chamado encontrado.</p>";
+                return;
+            }
+
+            chamados.forEach(c => {
+                const div = document.createElement("div");
+                div.classList.add("call-itemAdmin");
+                const statusChamado = (c.status || "").toLowerCase();
+
+                if (statusChamado === "aberto") {
+                    div.classList.add("chamado-aberto");
+                } else if (statusChamado === "finalizado") {
+                    div.classList.add("chamado-finalizado");
+                }
+                const tipo = (c.tipo || "—").toUpperCase();
+                const nome = (c.nome || c.numero || "—").toUpperCase();
+                const setor = (c.setor || "—").toUpperCase();
+                const data = formatarDataChamado(c.data);
+                const idChamado = c.id_chamado || "—";
+
+                div.innerHTML = `
+                <span>#${idChamado}</span>
+                <span>${tipo}</span>
+                <span>${nome}</span>
+                <span>${setor}</span>
+                <span>${data}</span>
+            `;
+                div.addEventListener("click", () => abrirPopupChamado(c.id_chamado));
+                lista.appendChild(div);
+            });
+        }
+
+        // --- FUNÇÃO DE DETALHES DO CHAMADO (POPUP) ---
+
+        async function abrirPopupChamado(idChamado) {
+            const chamadoPopupOverlay = document.getElementById('chamadoPopupOverlay');
+            const previewContainer = document.getElementById("imagensPreviewPopup");
+
+            previewContainer.innerHTML = 'Carregando detalhes...';
+            chamadoPopupOverlay.style.display = 'flex';
+
+            try {
+                const response = await fetch(`${API_URL}/getDetalhesChamado?idChamado=${idChamado}`);
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    const c = data.data;
+
+                    // 1. Preenche os campos do Popup
+                    document.getElementById('popupTipoServico').value = c.tipo || '';
+                    document.getElementById('popupSolicitante').value = c.nome || '';
+                    document.getElementById('popupNumero').value = c.numero || '';
+                    document.getElementById('popupId').value = '#' + c.id_chamado;
+                    document.getElementById('popupSetor').value = c.setor || '';
+                    document.getElementById('popupData').value = formatarDataChamado(c.data);
+                    document.getElementById('popupDescricao').value = c.descricao || '';
+
+                    // 2. Renderiza as Imagens (Base64)
+                    previewContainer.innerHTML = '';
+                    let imagensEncontradas = 0;
+
+                    for (let i = 1; i <= 6; i++) {
+                        const imagemBase64 = c[`imagem${i}`];
+
+                        if (imagemBase64) {
+                            const src = `data:image/png;base64,${imagemBase64}`;
+                            const preview = criarPreview(src, false); // Não removível
+                            previewContainer.appendChild(preview);
+                            imagensEncontradas++;
+                        }
+                    }
+
+                    if (imagensEncontradas === 0) {
+                        previewContainer.innerHTML = '<p>Nenhuma imagem anexada.</p>';
+                    }
+
+                } else {
+                    alert(`Erro ao carregar chamado: ${data.message || 'Dados inválidos.'}`);
+                    chamadoPopupOverlay.style.display = 'none';
+                }
+            } catch (error) {
+                console.error("Erro ao buscar detalhes do chamado:", error);
+                alert("Falha na comunicação com o servidor.");
+                chamadoPopupOverlay.style.display = 'none';
+            }
+        }
+
+
+
+        async function abrirNovoChamado(event) {
+            event.preventDefault();
+            const form = document.getElementById('formAbrirChamadoAdmin');
+            const nomeUsuario = document.getElementById('nomeUsuario').value;
+            const numeroChamado = document.getElementById('numeroChamado').value;
+            const dataChamado = document.getElementById('dataChamado').value;
+            const callType = document.getElementById('callType').value;
+            const setor = document.getElementById('setor').value;
+            const description = document.getElementById('description').value;
+            const previewContainer = document.getElementById('imagensPreviewForm');
+            const userId = localStorage.getItem("userId");
+            const fileInput = document.getElementById('fileInputForm');
+            const files = fileInput ? fileInput.files : [];
+            if (!userId) {
+                alert("Erro: ID de usuário não encontrado. Faça login novamente.");
+                return;
+            }
+
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('idUser', userId);
+            formData.append('nome', nomeUsuario);
+            formData.append('numero', numeroChamado);
+            formData.append('data', dataChamado);
+            formData.append('tipo', callType);
+            formData.append('setor', setor);
+            formData.append('descricao', description);
+
+            const imagensPreview = previewContainer.querySelectorAll('.imagem-preview-item img');
+
+            for (let i = 0; i < files.length && i < 6; i++) {
+                formData.append("fotos[]", files[i]);
+            }
+
+            console.log("--- Conteúdo do FormData ---");
+            for (const pair of formData.entries()) {
+                // Verifica se o valor é um objeto File (uma foto)
+                if (pair[1] instanceof File) {
+                    console.log(pair[0] + ': ' + 'FILE (Nome: ' + pair[1].name + ', Tamanho: ' + pair[1].size + ' bytes)');
+                } else {
+                    // Campos de texto
+                    console.log(pair[0] + ': ' + pair[1]);
+                }
+            }
+            console.log("----------------------------");
+            try {
+                const response = await fetch(`${API_URL}/createChamadoAdmin`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    alert("✅ Chamado aberto com sucesso!");
+                    form.reset();
+                    previewContainer.innerHTML = '';
+                    CarregarTodosChamadosTi(userId);
+                } else {
+                    alert(`❌ Erro ao abrir chamado: ${data.message || 'Resposta inválida do servidor.'}`);
+                    console.error("Detalhes do erro:", data);
+                }
+            } catch (error) {
+                console.error("Erro na comunicação com a API:", error);
+                alert("❌ Falha na conexão ou erro inesperado aqui no front.");
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+
+        // --- Funções de Upload/Preview e Modal ---
+
+        function criarPreview(src, removivel = true) {
+            const bloco = document.createElement("div");
+            bloco.className = "imagem-preview-item";
+            let removerBtn = removivel ? '<button type="button" class="remover-imagem">×</button>' : '';
+            bloco.innerHTML = `
+            <img src="${src}">
+            ${removerBtn}
+        `;
+            return bloco;
+        }
+
+        function ativarRemocao(container) {
+            container.querySelectorAll(".remover-imagem").forEach(btn => {
+                btn.onclick = () => {
+                    btn.parentElement.remove();
+                };
+            });
+        }
+
+        function iniciarUploadImagens(config) {
+            const { uploadArea, fileInput, previewContainer } = config;
+
+            function processarArquivos(arquivos) {
+                const totalAtual = previewContainer.children.length;
+                const totalNovas = arquivos.length;
+
+                if (totalAtual + totalNovas > 6) {
+                    alert("Máximo permitido: 6 imagens.");
+                    return;
+                }
+
+                [...arquivos].forEach(file => {
+                    if (!file.type.startsWith("image/")) return;
+
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        const preview = criarPreview(e.target.result, true);
+                        previewContainer.appendChild(preview);
+                        ativarRemocao(previewContainer);
+                    };
+                    reader.readAsDataURL(file);
+                });
+                fileInput.value = '';
+            }
+
+            if (uploadArea) {
+                uploadArea.addEventListener("click", () => fileInput.click());
+                fileInput.addEventListener("change", e => processarArquivos(e.target.files));
+
+                uploadArea.addEventListener("dragover", e => { e.preventDefault(); uploadArea.classList.add("hover"); });
+                uploadArea.addEventListener("dragleave", () => { uploadArea.classList.remove("hover"); });
+                uploadArea.addEventListener("drop", e => {
+                    e.preventDefault();
+                    uploadArea.classList.remove("hover");
+                    processarArquivos(e.dataTransfer.files);
+                });
+            }
+        }
+
+        function fecharModalFunc() {
+            modalImagem.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        function atualizarModal() {
+            if (modalListaAtual.length === 0) {
+                fecharModalFunc();
+                return;
+            }
+            modalIndexAtual = (modalIndexAtual + modalListaAtual.length) % modalListaAtual.length;
+            imagemAmpliada.src = modalListaAtual[modalIndexAtual];
+            modalContador.textContent = `${modalIndexAtual + 1} / ${modalListaAtual.length}`;
+        }
+
+        function navegarModal(direcao) {
+            modalIndexAtual += direcao;
+            atualizarModal();
+        }
+
+        function abrirModalContainer(listaImgs, index) {
+            modalListaAtual = listaImgs.map(img => img.src);
+            modalIndexAtual = index;
+
+            atualizarModal();
+            modalImagem.style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+
+        function ativarModalNoContainer(previewContainer) {
+            previewContainer.addEventListener("click", e => {
+                if (e.target.tagName === "IMG") {
+                    const imagens = [...previewContainer.querySelectorAll("img")];
+                    const index = imagens.indexOf(e.target);
+                    abrirModalContainer(imagens, index);
+                }
+            });
+        }
+
+        function iniciarArea(config) {
+            iniciarUploadImagens(config);
+            ativarModalNoContainer(config.previewContainer);
+        }
+
+        function atualizarPlaceholderContador(total) {
+            const campoPesquisa = document.getElementById("campoPesquisa");
+            if (campoPesquisa) {
+                campoPesquisa.placeholder = `Total: ${total} chamados`;
+            }
+        }
+
+
+        function configurarFiltros() {
+            const filtroBtns = Array.from(document.querySelectorAll('.filtroC-btn'));
+            const btnAbertos = document.getElementById("btnAbertos");
+            const btnFinalizados = document.getElementById("btnFinalizados");
+            const refreshBtn = document.getElementById("refreshBtn");
+
+            let statusFilter = null;
+
+            function aplicarFiltroAtual() {
+                let listaParaRender = todosChamados;
+
+                if (statusFilter === "aberto") {
+                    listaParaRender = listaParaRender.filter(c => (c.status || "").toLowerCase() === "aberto");
+                } else if (statusFilter === "finalizado") {
+                    listaParaRender = listaParaRender.filter(c => (c.status || "").toLowerCase() === "finalizado");
+                }
+
+                document.getElementById("campoPesquisa").value = "";
+                renderizarTodosChamados(listaParaRender);
+            }
+
+            [btnAbertos, btnFinalizados].forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const isAbertos = btn.id === 'btnAbertos';
+                    const novoFiltro = isAbertos ? "aberto" : "finalizado";
+                    if (btn.classList.contains('active')) {
+                        btn.classList.remove('active');
+                        statusFilter = null;
+                    } else {
+                        btnAbertos.classList.remove('active');
+                        btnFinalizados.classList.remove('active');
+
+                        btn.classList.add('active');
+                        statusFilter = novoFiltro;
+                    }
+                    aplicarFiltroAtual();
+                });
+            });
+
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', () => {
+                    document.getElementById("campoPesquisa").value = "";
+                    statusFilter = null;
+                    filtroBtns.forEach(b => b.classList.remove('active'));
+                    renderizarTodosChamados(todosChamados);
+                    atualizarPlaceholderContador(todosChamados.length);
+                });
+            }
+        }
+
+        function configurarPesquisa() {
+            const formPesquisa = document.getElementById("formPesquisa");
+            const campoPesquisa = document.getElementById("campoPesquisa");
+            const listaChamados = document.getElementById("listaChamados");
+            const contadorElement = document.getElementById("contadorPesquisa");
+
+            if (!formPesquisa || !listaChamados || !contadorElement) return;
+
+            const executarPesquisa = (event) => {
+                if (event && event.type === 'submit') {
+                    event.preventDefault();
+                }
+
+                const termo = campoPesquisa.value.trim().toUpperCase();
+
+                document.querySelectorAll('.filtroC-btn').forEach(b => b.classList.remove('active'));
+
+                const chamados = listaChamados.querySelectorAll(".call-itemAdmin");
+                let resultadosEncontrados = 0;
+
+                if (termo === "") {
+                    chamados.forEach(chamado => {
+                        chamado.style.display = "";
+                    });
+                    contadorElement.textContent = "";
+                    return;
+                }
+
+                chamados.forEach(chamado => {
+                    const spans = chamado.querySelectorAll("span");
+                    let encontrou = false;
+
+                    spans.forEach(s => {
+                        let textoSpan = s.textContent.toUpperCase();
+
+                        if (textoSpan.includes(termo)) {
+                            encontrou = true;
+                        }
+                    });
+
+                    if (encontrou) {
+                        chamado.style.display = "";
+                        resultadosEncontrados++;
+                    } else {
+                        chamado.style.display = "none";
+                    }
+                });
+                if (termo.length > 0) {
+                    contadorElement.textContent = ` (${resultadosEncontrados} encontrado${resultadosEncontrados !== 1 ? 's' : ''})`;
+                } else {
+                    contadorElement.textContent = "";
+                }
+            };
+
+            formPesquisa.addEventListener('submit', executarPesquisa);
+            campoPesquisa.addEventListener('input', executarPesquisa);
+        }
+
+        function configurarPopupUsuario(idUser) {
+            const userBtn = document.getElementById('userBtn');
+            const popupOverlay = document.getElementById('popupOverlay');
+            const closePopup = document.getElementById('closePopup');
+            const alterarUser = document.getElementById('alterarUser');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            if (userBtn) userBtn.addEventListener('click', () => popupOverlay.style.display = 'flex');
+            if (closePopup) closePopup.addEventListener('click', () => popupOverlay.style.display = 'none');
+            window.addEventListener('click', (e) => { if (e.target === popupOverlay) popupOverlay.style.display = 'none'; });
+
+            if (alterarUser) {
+                alterarUser.addEventListener('click', () => {
+                    const numero = popupOverlay.querySelector('input[placeholder="Novo Numero"]').value.trim();
+                    const senha = popupOverlay.querySelector('input[placeholder="Nova senha"]').value.trim();
+                    if (!numero && !senha) { alert("Preencha pelo menos um campo!"); return; }
+
+                    const formData = new FormData();
+                    formData.append('idUser', idUser);
+                    if (numero) formData.append('telefone_user', numero);
+                    if (senha) formData.append('senha_user', senha);
+
+                    fetch(`${API_URL}/updateUserPopUp`, { method: 'POST', body: formData })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) { alert('Usuário atualizado com sucesso!'); }
+                            else { alert('Erro: ' + (data.message || 'Não foi possível atualizar')); }
+                        })
+                        .catch(err => { console.error('Erro no fetch:', err); alert('Erro ao conectar'); });
+                });
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', encerrarSessao);
+            }
+        }
+
+        function encerrarSessao() {
+            const btn = document.getElementById('logoutBtn');
+            try {
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userId');
+                sessionStorage.clear();
+                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                if (btn) {
+                    btn.innerHTML = '✅ Sessão Encerrada';
+                    btn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+                }
+
+                setTimeout(() => {
+                    window.location.href = '../login.html';
+                }, 1000);
+            } catch (error) {
+                console.error('Erro ao encerrar sessão:', error);
+                if (btn) {
+                    btn.innerHTML = '❌ Erro ao Sair';
+                    btn.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+                }
+                setTimeout(() => {
+                    window.location.href = '../login.html';
+                }, 1500);
+            }
+        }
+
+        // Listener para o popup de detalhes do chamado (garante que ele feche)
+        const chamadoPopupOverlay = document.getElementById('chamadoPopupOverlay');
+        const closeChamadoPopup = document.getElementById('closeChamadoPopup');
+
+        if (closeChamadoPopup) {
+            closeChamadoPopup.addEventListener('click', () => {
+                if (chamadoPopupOverlay) chamadoPopupOverlay.style.display = 'none';
+            });
+        }
+        // O fechamento ao clicar fora já está configurado no DOMContentLoaded principal
+    </script>
+
+    <style>
+        .upload-areaAdmin {
+            width: 90%;
+            height: 90px;
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-bottom: 40px;
+        }
+
+        .popup-acoes-chamado {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+            right: -200px;
+        }
+
+
+
+        button.submit-btn {
+            background: #002855;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+            width: 150px;
+            height: 40px;
+            margin-left: 190px;
+            position: relative;
+            top: 5px;
+            /* move para baixo */
+            left: 380px;
+        }
+
+        .call-itemAdmin {
+            transition: background-color 0.3s ease;
+        }
+
+        .chamado-aberto {
+            background-color: #f8f0ab !important;
+            border-left: 5px solid #ffc107;
+        }
+
+        .chamado-finalizado {
+            background-color: #aafab1bb !important;
+            border-left: 5px solid #4caf50;
+        }
+
+        .call-listAdmin .call-itemAdmin span:nth-child(1) {
+            flex: 0 0 50px;
+        }
+
+        .call-listAdmin .call-itemAdmin span:nth-child(2) {
+            flex: 0 0 120px;
+        }
+
+        .call-listAdmin .call-itemAdmin span:nth-child(3) {
+            flex: 0 0 150px;
+        }
+
+        .call-listAdmin .call-itemAdmin span:nth-child(4) {
+            flex: 0 0 40px;
+        }
+
+        .call-listAdmin .call-itemAdmin span:nth-child(5) {
+            flex: 0 0 100px;
+            text-align: right;
+            padding-right: 0;
+        }
+    </style>
+
+</body>
+<script src="../../js/urls-amigaveis.js"></script>
+
+</html>

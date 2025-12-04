@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <link rel="icon" type="image/png" href="../../icon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="../../icon/favicon.svg">
+    <link rel="shortcut icon" href="../../icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../icon/apple-touch-icon.png">
+    <link rel="manifest" href="../../icon/site.webmanifest">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Visolux TI</title>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+
+    <header>
+        <img src="../../img/logo-x.png" alt="Logo da visolux" width="40" height="40" class="logo-img">
+        <div class="logo">VISOLUX TI</div>
+        <ul class="nav-links">
+            <li><a href="UserAdminChamados.html">CHAMADOS</a></li>
+            <li><a href="UserAdminAbrirChamados.html">ABRIR CHAMADO</a></li>
+            <li><a href="UserAdminUsuarios.html">USUARIOS</a></li>
+        </ul>
+        <button class="user-btn" id="userBtn">
+            <img src="../../img/user.png" alt="Logo do User" class="user-icon">
+        </button>
+    </header>
+
+
+
+    <div class="popup-overlay" id="popupOverlay">
+
+        <div class="popupEditarUserComum">
+            <button class="close-btnX" id="closePopup">X</button>
+
+            <h3>Editar Usuário</h3>
+            <input type="number" placeholder="Novo Numero">
+            <input type="password" placeholder="Nova senha">
+            <div>
+                <button class="save-btn" id="alterarUser">Salvar</button>
+                <div class="popup-deslogar">
+                    <button class="logout-btn" id="logoutBtn">Encerrar Sessão</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- CRIAR USER POPUP -->
+    <div class="popup-cu" id="popupcu">
+        <div class="popupCriarUser">
+            <button class="close-cu" id="closePopupCU">X</button>
+
+            <h3>CRIAR USUARIO</h3>
+            <input type="text" placeholder="Nome">
+            <input type="number" placeholder="Numero">
+            <input type="password" placeholder="Senha">
+            <select name="setor" id="setor" required>
+                <option value="" disabled selected>Selecione o setor</option>
+                <option value="ACRILICO">Acrílico</option>
+                <option value="ADMINISTRATIVO">Administrativo</option>
+                <option value="ALMOXARIFADO">Almoxarifado</option>
+                <option value="ALMOXARIFADO_FERRAGENS">Almoxarifado (Ferragens)</option>
+                <option value="COMERCIAL">Comercial</option>
+                <option value="COMPRAS">Compras</option>
+                <option value="ELETRICA">Elétrica</option>
+                <option value="EMBALAGENS">Embalagens</option>
+                <option value="EXPEDICAO">Expedição</option>
+                <option value="FATURAMENTO">Faturamento</option>
+                <option value="FINANCEIRO">Financeiro</option>
+                <option value="FUNILARIA">Funilaria</option>
+                <option value="IMPRESSAO">Impressão</option>
+                <option value="OPERACIONAL">Operacional</option>
+                <option value="PCP">PCP</option>
+                <option value="PELICULA">Película</option>
+                <option value="PINTURA">Pintura</option>
+                <option value="PLOTER">Ploter</option>
+                <option value="PROCESSOS">Processos</option>
+                <option value="PROJETO">Projeto</option>
+                <option value="QUALIDADE">Qualidade</option>
+                <option value="RECEPCAO">Recepção</option>
+                <option value="RECORTE">Recorte</option>
+                <option value="RH">RH</option>
+                <option value="SERRALHERIA">Serralheria</option>
+                <option value="SESMT_OPERACIONAL">SESMT (Operacional)</option>
+                <option value="TI">TI</option>
+            </select>
+            <div>
+                <button class="criar-btn">Criar</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <main>
+        <div class="container1Admin" id="yourUsers">
+            <div class="titulo-popUpcu">
+                <h3>USERS</h3>
+                <div class="popUpcu-btn-container">
+                    <button type="button" class="popUpcu-btn">CRIAR USUARIO</button>
+                </div>
+            </div>
+
+            <!--apí de puxar especificos-->
+            <form class="search-bar" onsubmit="redirecionarParaPesquisa(event)">
+                <input type="text" id="campoPesquisa" placeholder="Pesquisar por" required>
+                <button type="submit">🔎</button>
+            </form>
+
+            <div class="call-listUserAdmin">
+
+
+            </div>
+        </div>
+
+
+
+        <div class="container2Admin" id="editUser">
+            <h2>EDIÇÃO DE USER</h2>
+
+            <form id="formEditarUser" enctype="multipart/form-data">
+                <div class="campoinfoAdmin">
+
+                    <div>
+                        <label for="nomeUsuario">Nome:</label>
+                        <input type="text" id="nomeUsuario" name="nomeUsuario">
+                    </div>
+
+                    <div>
+                        <label for="telefone">Telefone:</label>
+                        <input type="text" id="numeroUser" name="numeroUser">
+                    </div>
+
+                    <div>
+                        <label for="idUser">ID:</label>
+                        <input type="text" id="idUser" name="idUser" readonly>
+                    </div>
+
+                    <div>
+                        <label for="senha">Nova Senha:</label>
+                        <input type="text" id="senha" name="senha">
+                    </div>
+
+                    <div>
+                        <label for="callType">Setor (selecionar):</label>
+                        <select name="setor" id="setor" required>
+                            <option value="" disabled selected>Selecione o setor</option>
+                            <option value="ACRILICO">Acrílico</option>
+                            <option value="ADMINISTRATIVO">Administrativo</option>
+                            <option value="ALMOXARIFADO">Almoxarifado</option>
+                            <option value="ALMOXARIFADO_FERRAGENS">Almoxarifado (Ferragens)</option>
+                            <option value="COMERCIAL">Comercial</option>
+                            <option value="COMPRAS">Compras</option>
+                            <option value="ELETRICA">Elétrica</option>
+                            <option value="EMBALAGENS">Embalagens</option>
+                            <option value="EXPEDICAO">Expedição</option>
+                            <option value="FATURAMENTO">Faturamento</option>
+                            <option value="FINANCEIRO">Financeiro</option>
+                            <option value="FUNILARIA">Funilaria</option>
+                            <option value="IMPRESSAO">Impressão</option>
+                            <option value="OPERACIONAL">Operacional</option>
+                            <option value="PCP">PCP</option>
+                            <option value="PELICULA">Película</option>
+                            <option value="PINTURA">Pintura</option>
+                            <option value="PLOTER">Ploter</option>
+                            <option value="PROCESSOS">Processos</option>
+                            <option value="PROJETO">Projeto</option>
+                            <option value="QUALIDADE">Qualidade</option>
+                            <option value="RECEPCAO">Recepção</option>
+                            <option value="RECORTE">Recorte</option>
+                            <option value="RH">RH</option>
+                            <option value="SERRALHERIA">Serralheria</option>
+                            <option value="SESMT_OPERACIONAL">SESMT (Operacional)</option>
+                            <option value="TI">TI</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="acoes-formAdmin">
+                    <button type="button" class="submit-btnAdmin deletar">🗑️ Deletar</button>
+                    <button type="button" class="submit-btnAdmin finalizar">✅ Finalizar</button>
+                    <button type="button" class="submit-btnAdmin limpar">🔄 Refresh </button>
+                    <button type="button" class="submit-btnAdmin salvar">💾 Salvar </button>
+                </div>
+
+            </form>
+        </div>
+
+
+
+
+
+    </main>
+
+    <footer>
+        © 2025 VISOLUX & THOR — Todos os direitos reservados
+    </footer>
+
+
+    <script>
+        document.body.style.zoom = "100%";
+
+        const API_URL = 'http://localhost:8001/api';
+        let todosUsuarios = []; // Armazena a lista completa de usuários
+        const formEditarUser = document.getElementById("formEditarUser");
+        const listaUsersContainer = document.querySelector(".call-listUserAdmin");
+        const formCriarUserContainer = document.querySelector(".popupCriarUser");
+        const popupCU = document.getElementById("popupcu");
+        const editUserContainer = document.getElementById("editUser");
+        const btnDeletar = document.querySelector('.submit-btnAdmin.deletar');
+        const btnSalvar = document.querySelector('.submit-btnAdmin.salvar');
+        const btnLimpar = document.querySelector('.submit-btnAdmin.limpar');
+        document.querySelector('.submit-btnAdmin.finalizar').style.display = 'none';
+        document.addEventListener("DOMContentLoaded", () => {
+            const userId = localStorage.getItem("userId");
+            if (!userId) {
+                window.location.href = "../login.html";
+                return;
+            }
+            carregarTodosUsuarios(userId);
+            configurarPopupUsuario(userId); // Popup de edição do próprio usuário (canto superior direito)
+            configurarPopupCriarUser();
+            configurarAcoesFormularioEdicao();
+            configurarBotaoSalvarConfirmar();
+            configurarPesquisa();
+        });
+
+
+
+        async function carregarTodosUsuarios(userId) {
+            try {
+                const response = await fetch(`${API_URL}/getAllUsersAdmin?idUserSession=${userId}`);
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                const data = await response.json();
+                if (data.success && Array.isArray(data.data)) {
+                    todosUsuarios = data.data;
+                    renderizarTodosUsuarios(todosUsuarios);
+                    if (todosUsuarios.length > 0) {
+                        abrirEdicaoUsuario(todosUsuarios[0].id_user);
+                    } else {
+                        formEditarUser.reset();
+                    }
+
+                } else {
+                    console.error("❌ Erro no retorno da API:", data.message || data);
+                    listaUsersContainer.innerHTML = "<p>Erro ao carregar usuários.</p>";
+                }
+            } catch (error) {
+                console.error("Erro ao carregar usuários:", error);
+                listaUsersContainer.innerHTML = "<p>Erro de conexão ao carregar usuários. Verifique o console.</p>";
+            }
+        }
+
+
+        function renderizarTodosUsuarios(usuarios) {
+            listaUsersContainer.innerHTML = "";
+            if (!usuarios.length) {
+                listaUsersContainer.innerHTML = "<p>Nenhum usuário encontrado.</p>";
+                return;
+            }
+            usuarios.forEach(user => {
+                const div = document.createElement("div");
+                div.classList.add("call-itemUserAdmin");
+                const idUser = user.id_user || "—";
+                const nome = (user.nome || "—").toUpperCase();
+                const setor = (user.setor || "—").toUpperCase();
+                const telefone = (user.telefone || "—").toUpperCase();
+
+                div.setAttribute('data-user-id', idUser);
+
+                div.innerHTML = `
+            <span>${nome}</span>
+            <span>${setor}</span>
+            <span>${telefone}</span>
+
+        `;
+                div.addEventListener("click", () => abrirEdicaoUsuario(idUser));
+                listaUsersContainer.appendChild(div);
+            });
+        }
+
+        function abrirEdicaoUsuario(idUser) {
+            const user = todosUsuarios.find(u => u.id_user == idUser);
+            if (!user) {
+                alert("Erro: Usuário não encontrado na lista.");
+                return;
+            }
+            preencherFormularioEdicao(user);
+            editUserContainer.style.display = "block";
+
+            document.querySelectorAll(".call-itemUserAdmin").forEach(item => {
+                item.classList.remove("selected-user");
+
+                if (item.getAttribute('data-user-id') === idUser) {
+                    item.classList.add("selected-user");
+                }
+            });
+        }
+
+        function preencherFormularioEdicao(user) {
+            formEditarUser.querySelector("#nomeUsuario").value = user.nome || "";
+
+            formEditarUser.querySelector("#numeroUser").value = user.telefone || "";
+
+            formEditarUser.querySelector("#idUser").value = user.id_user || "";
+            formEditarUser.querySelector("#senha").value = "";
+
+            const setorSelect = formEditarUser.querySelector('select[name="setor"]');
+            setorSelect.value = user.setor || "";
+            configurarBotaoDeletar(user.id_user);
+        }
+
+
+        function configurarPopupCriarUser() {
+            const openPopupCU = document.querySelector(".popUpcu-btn");
+            const closePopupCU = document.getElementById("closePopupCU");
+            const criarBtn = formCriarUserContainer.querySelector(".criar-btn");
+            openPopupCU.addEventListener("click", () => { popupCU.style.display = "flex"; formCriarUserContainer.reset(); });
+            closePopupCU.addEventListener("click", () => { popupCU.style.display = "none"; });
+            popupCU.addEventListener("click", (e) => { if (e.target === popupCU) { popupCU.style.display = "none"; } });
+            if (criarBtn) {
+                criarBtn.addEventListener('click', async () => {
+                    const nomeInput = formCriarUserContainer.querySelector('input[placeholder="Nome"]');
+                    const numeroInput = formCriarUserContainer.querySelector('input[placeholder="Numero"]');
+                    const senhaInput = formCriarUserContainer.querySelector('input[placeholder="Senha"]');
+                    const setorSelect = formCriarUserContainer.querySelector('select[name="setor"]');
+
+                    const nome = nomeInput.value.trim();
+                    const numero = numeroInput.value.trim();
+                    const senha = senhaInput.value.trim();
+                    const setor = setorSelect.value;
+
+                    if (!nome || !numero || !senha || !setor) {
+                        alert("Preencha todos os campos para criar o usuário.");
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('nome', nome);
+                    formData.append('telefone', numero);
+                    formData.append('senha', senha);
+                    formData.append('setor', setor);
+                    formData.append('idUserSession', localStorage.getItem('userId'));
+
+                    try {
+                        const response = await fetch(`${API_URL}/createUser`, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const data = await response.json();
+
+                        if (data.success) {
+                            alert('Usuário criado com sucesso!');
+                            popupCU.style.display = 'none';
+                            carregarTodosUsuarios(localStorage.getItem('userId'));
+                        } else {
+                            alert('❌ Erro da API: ' + (data.message || 'Falha ao criar usuário.'));
+                        }
+                    } catch (error) {
+                        console.error("Erro ao criar usuário:", error);
+                        alert('Erro de conexão ao criar usuário.');
+                    }
+                });
+            }
+        }
+
+
+        function configurarAcoesFormularioEdicao() {
+            if (btnLimpar) {
+                btnLimpar.addEventListener('click', () => {
+                    const idUserAtual = formEditarUser.querySelector("#idUser").value;
+                    if (idUserAtual) {
+                        abrirEdicaoUsuario(idUserAtual);
+                    } else {
+                        formEditarUser.reset();
+                    }
+                });
+            }
+        }
+
+        async function salvarEdicaoUsuario() {
+            const userIdSession = localStorage.getItem("userId");
+            const idUserEditado = formEditarUser.querySelector("#idUser").value;
+
+            if (!userIdSession || !idUserEditado) {
+                alert("Erro: ID de sessão ou ID do usuário a ser editado não encontrado.");
+                return;
+            }
+            const formData = new FormData();
+            formData.append('idUserSession', userIdSession);
+            formData.append('idUserEditado', idUserEditado);
+            formData.append('nome', formEditarUser.querySelector("#nomeUsuario").value.trim());
+            formData.append('telefone', formEditarUser.querySelector("#numeroUser").value.trim());
+            formData.append('setor', formEditarUser.querySelector('select[name="setor"]').value);
+            const senha = formEditarUser.querySelector("#senha").value.trim();
+            if (senha) {
+                formData.append('senha', senha);
+            }
+            /*
+            console.log("--- DADOS ENVIADOS AO BACKEND (DEBUG) ---");
+            for (const pair of formData.entries()) {
+                console.log(`Chave: ${pair[0]}, Valor: '${pair[1]}'`); // Usamos aspas simples para ver espaços em branco
+            }
+            console.log("-----------------------------------------");*/
+            try {
+                const response = await fetch(`${API_URL}/updateUserAdmin`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Usuário atualizado com sucesso!`);
+                    await carregarTodosUsuarios(userIdSession);
+                    abrirEdicaoUsuario(idUserEditado);
+                } else {
+                    alert(`❌ Erro da API: ${data.message || 'Falha desconhecida ao salvar.'}`);
+                }
+
+            } catch (error) {
+                console.error("Erro ao salvar edição:", error);
+                alert(`Ocorreu um erro ao salvar: ${error.message}`);
+            }
+        }
+
+
+
+        function configurarBotaoSalvarConfirmar() {
+            if (!btnSalvar) return;
+            let resetTimerSalvar;
+            const textoOriginal = '💾 Salvar';
+            const corOriginal = btnSalvar.style.backgroundColor;
+            const reverterBotaoSalvar = () => {
+                if (btnSalvar.classList.contains('confirmar-salvar')) {
+                    btnSalvar.classList.remove('confirmar-salvar');
+                    btnSalvar.textContent = textoOriginal;
+                    btnSalvar.style.backgroundColor = corOriginal;
+                }
+                clearTimeout(resetTimerSalvar);
+            };
+            document.addEventListener('mousedown', function (event) {
+                if (event.target !== btnSalvar) {
+                    reverterBotaoSalvar();
+                }
+            });
+            btnSalvar.onclick = function (event) {
+                if (btnSalvar.classList.contains('confirmar-salvar')) {
+                    salvarEdicaoUsuario();
+                    reverterBotaoSalvar();
+                } else {
+                    btnSalvar.classList.add('confirmar-salvar');
+                    btnSalvar.textContent = 'Confirmar';
+
+                    clearTimeout(resetTimerSalvar);
+                    resetTimerSalvar = setTimeout(reverterBotaoSalvar, 3000);
+                }
+            };
+            btnSalvar.textContent = textoOriginal;
+            btnSalvar.classList.remove('confirmar-salvar');
+            btnSalvar.style.backgroundColor = corOriginal;
+        }
+
+
+
+        function configurarBotaoDeletar(idUser) {
+            if (!btnDeletar) return;
+            const reverterBotao = () => {
+                if (btnDeletar.classList.contains('confirm-delete')) {
+                    btnDeletar.classList.remove('confirm-delete');
+                    btnDeletar.textContent = '🗑️ Deletar';
+                    btnDeletar.style.backgroundColor = '';
+                }
+                clearTimeout(resetTimer);
+            };
+
+            let resetTimer;
+            btnDeletar.textContent = '🗑️ Deletar';
+            btnDeletar.classList.remove('confirm-delete');
+            btnDeletar.style.backgroundColor = '';
+
+            document.addEventListener('mousedown', function (event) {
+                if (event.target !== btnDeletar) {
+                    reverterBotao();
+                }
+            });
+
+            btnDeletar.onclick = function (event) {
+                if (btnDeletar.classList.contains('confirm-delete')) {
+                    deletarUsuario(idUser);
+                    reverterBotao();
+                } else {
+                    btnDeletar.classList.add('confirm-delete');
+                    btnDeletar.textContent = 'Confirmar';
+                    btnDeletar.style.backgroundColor = '#dc3545';
+                    clearTimeout(resetTimer);
+                    resetTimer = setTimeout(reverterBotao, 3000);
+                }
+            };
+        }
+
+
+
+
+
+
+        async function deletarUsuario(idUser) {
+            try {
+                const userIdSession = localStorage.getItem("userId");
+                if (!userIdSession) {
+                    alert("Erro: ID de sessão do usuário não encontrado.");
+                    return;
+                }
+
+                const deleteUrl = `${API_URL}/deleteUserAdmin?idUserSession=${userIdSession}&id=${idUser}`;
+
+                const response = await fetch(deleteUrl, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: `Erro HTTP: ${response.status}` }));
+                    throw new Error(errorData.message || `Falha ao deletar usuário: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Usuário deletado com sucesso.`);
+                    formEditarUser.reset(); // Limpa o formulário
+                    await carregarTodosUsuarios(userIdSession);
+                } else {
+                    alert(`❌ Erro da API: ${data.message || 'Falha desconhecida ao deletar.'}`);
+                }
+
+            } catch (error) {
+                console.error("Erro ao deletar usuário:", error);
+                alert(`Ocorreu um erro: ${error.message}`);
+            }
+        }
+
+
+        function configurarPesquisa() {
+            const formPesquisa = document.querySelector(".search-bar");
+            const campoPesquisa = document.getElementById("campoPesquisa");
+            if (!formPesquisa) return;
+            const executarPesquisa = (event) => {
+                if (event && event.type === 'submit') {
+                    event.preventDefault();
+                }
+                const termo = campoPesquisa.value.trim().toUpperCase();
+                let usuariosFiltrados = todosUsuarios.filter(user => {
+                    const idUser = (user.id_user || "").toString().toUpperCase();
+                    const nome = (user.nome || "").toUpperCase();
+                    const setor = (user.setor || "").toUpperCase();
+
+                    return idUser.includes(termo) || nome.includes(termo) || setor.includes(termo);
+                });
+                renderizarTodosUsuarios(usuariosFiltrados);
+                if (usuariosFiltrados.length === 0) {
+                    formEditarUser.reset();
+                } else if (termo && usuariosFiltrados.length > 0) {
+                    abrirEdicaoUsuario(usuariosFiltrados[0].id_user);
+                } else if (!termo) {
+                    abrirEdicaoUsuario(todosUsuarios[0].id_user);
+                }
+            };
+
+            formPesquisa.addEventListener('submit', executarPesquisa);
+            campoPesquisa.addEventListener('input', executarPesquisa);
+
+            if (window.redirecionarParaPesquisa) {
+                window.redirecionarParaPesquisa = function (event) {
+                    executarPesquisa(event);
+                };
+            }
+        }
+
+
+        function configurarPopupUsuario(idUser) {
+            const userBtn = document.getElementById('userBtn');
+            const popupOverlay = document.getElementById('popupOverlay');
+            const closePopup = document.getElementById('closePopup');
+            const alterarUser = document.getElementById('alterarUser');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            userBtn.addEventListener('click', () => popupOverlay.style.display = 'flex');
+            closePopup.addEventListener('click', () => popupOverlay.style.display = 'none');
+            window.addEventListener('click', (e) => { if (e.target === popupOverlay) popupOverlay.style.display = 'none'; });
+
+            if (alterarUser) {
+                alterarUser.addEventListener('click', () => {
+                    const numero = popupOverlay.querySelector('input[placeholder="Novo Numero"]').value.trim();
+                    const senha = popupOverlay.querySelector('input[placeholder="Nova senha"]').value.trim();
+                    if (!numero && !senha) { alert("Preencha pelo menos um campo!"); return; }
+
+                    const formData = new FormData();
+                    formData.append('idUser', idUser);
+                    if (numero) formData.append('telefone_user', numero);
+                    if (senha) formData.append('senha_user', senha);
+
+                    fetch(`${API_URL}/updateUserPopUp`, { method: 'POST', body: formData })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Usuário atualizado com sucesso!');
+                                popupOverlay.style.display = 'none';
+                                window.location.reload();
+                            }
+                            else { alert('Erro: ' + (data.message || 'Não foi possível atualizar')); }
+                        })
+                        .catch(err => { console.error('Erro no fetch:', err); alert('Erro ao conectar'); });
+                });
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', encerrarSessao);
+            }
+        }
+
+        function encerrarSessao() {
+            const btn = document.getElementById('logoutBtn');
+            try {
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userId');
+                sessionStorage.clear();
+                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                btn.innerHTML = '✅ Sessão Encerrada';
+                btn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+
+                setTimeout(() => { window.location.href = '../login.html'; }, 1000);
+            } catch (error) {
+                console.error('Erro ao encerrar sessão:', error);
+                btn.innerHTML = '❌ Erro ao Sair';
+                btn.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+                setTimeout(() => { window.location.href = '../login.html'; }, 1500);
+            }
+        }
+    </script>
+    <style>
+        .campoinfoAdmin {
+            flex: 1 1 48%;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+    </style>
+
+</body>
+<script src="../../js/urls-amigaveis.js"></script>
+
+</html>

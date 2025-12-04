@@ -1,0 +1,201 @@
+✅ SQL Injection - Prepared statements no Database //Só o Database protege contra SQL Injection
+
+✅ XSS Básico - strip_tags() na sanitização  // sanitizaçao so no service
+
+✅ Privilege Escalation - Validação de admin por UUID(id1b4e28ba-2fa1-11d2-883f-0016d3cca427) // no script do banco mesmo
+
+✅ SENHA HASH - segurança em senhas
+
+NO FRONT END, para ofuscament de endpoints:
+✔️ Minificação
+✔️ Ofuscação simples
+✔️ Compressão
+✔️ Bundling
+✔️ Hashing de arquivos
+✔️ Otimização automática
+
+
+(teoricamente eu precisaria de uma classe de autenticaçao de users(admin e comum), mas prefiri integrar nas classes de operçao de UsersService e Chamados Service, pois sao so duas classes)
+meu_projeto/
+│
+├── backend/                  # API RESTful (PHP puro COMPATIVEL COM A HOSTGATOR)
+│   │
+│   ├── app/
+│   │   ├── core/
+│   │   │   ├── Model.php
+│   │   │   └── Database.php
+│   │   │
+│   │   ├── controllers/      # Controladores API (retornam JSON)
+│   │   │   ├── Api/          # Pasta específica para APIs
+│   │   │   │   ├── UserController.php
+│   │   │   │   ├── ProductController.php
+│   │   │   │   └── ...
+│   │   │   └── ...
+│   │   │
+│   │   ├── models/           # Models (entidades de negócio)
+│   │   │    ├── User.php      # Entidade User
+│   │   │    └── Product.php   # Entidade Product
+│   │   ├── services/         # Camada de Serviços  
+│   │   ├── repositories/     # Padrão Repository
+│   │
+│   ├── config/               # Configurações
+│       └── routes.php
+│   └── public/
+│       └── index.php         # Front Controller da API
+│
+├── index.html
+├── frontend/                 # Aplicação Front-End (Separada)
+│   ├── src/
+│   │   ├── html/
+│   │   ├── css/
+│   │   ├── js/ 
+│   └── └── images/
+│   
+│
+└── vendor/                   # Dependências (Composer)
+
+
+
+
+16 APIS(FUNÇOES) UNICAS = 20 ENDPOINTS
+
+------PAINEL LOGIN
+ api - de login verificando, nome completo e senha
+ 
+------PAINEL TI
+.LISTA DE CHAMADOS ABERTOS + FINALIZADOS
+ funçao de pesquisa
+ (adicionar filtro no fornt de abertos e finalizados)
+ api - get full chamados abertos/finalizados com filtro, tipo, nome, setor, data e id chamado 
+.POPUP DE EDIÇAO E FINALIZAÇAO DE CHAMADOS EM ABERTO
+ api de modificaçao de nome - numero - setor - tipo - descriçao - fotos(6) - data 
+ api de puxar dados do chamado, nome - numero - setor - tipo - descriçao - fotos(6) - data - id
+ api de finalizar pedido (mudar status enum de aberto pra finalizado)
+ api de deletar chamado
+.POPUP DE EDIÇAO E REABERTURA DE CHAMADOS FINALIZADOS
+ api de puxar dados do chamado, nome - numero - setor - tipo - descriçao - fotos(6) - data
+ api de deletar chamado
+ api de reabrir chamado (mudar status enum)
+.POPUP USUARIO
+ api - puxar dados do usuario(numero, senha, id, nome)
+ api - alteraçao de nome, senha e numero
+.POPUP USUARIOS LISTA
+ funçao de pesquisa
+ api - get full usuarios nome, setor, id com filtro, tipo, nome, setor, data e id chamado 
+.POPUP  EDIÇAO USUARIO
+ api de modificaçao de nome - numero - senha - setor
+ api de puxar dados do usuario, nome - numero - senha - setor - id
+ api de deletar usuario
+.POPUP CRIAR USUARIO
+ api de criaçao de usuario, nome - numero - senha - setor e id gerado automaticamente
+.LISTA SEUS CHAMADOS
+ funçao de pesquisa
+ api - get full chamados q tem o setor ti - tipo, pessoa, setor e data
++
+botao de ediçao
+ api de modificaçao de nome - setor - tipo - descriçao - numero - descriçao - fotos(6) - data
+ api de puxar dados do chamado nome - setor - tipo - descriçao - numero - descriçao - fotos(6) - data - id
+ api de deletar chamado
+ api de finalizar chamado (mudar status enum)
+.ABRIR CHAMADO
+ api  - cadastro de chamado,  nome, numero, setor, tipo, data automatica, gerando id automatico, descriçao e fotos(6)
+
+
+------PAINEL FUNCIONARIO
+.LISTA SEUS CHAMADOS
+ funçao de pesquisa
+ api - getfullchamadomeuuser q tem o nome, tipo, setor e data + descricao e fotos(6)
++
+botao de ediçao
+ api de modificaçao(update) de - tipo - descriçao - fotos(6)
+ reaproveitamento da api de getfullchamadomeuuser
+.ABRIR CHAMADO
+ api  - cadastro de chamado puxando(nome, numero, setor), tipo, data automatica, gerando id automatico, descriçao e fotos(6)
+.POPUP USUARIO
+ api - puxar dados do usuario(numero, senha, nome)
+ api - alteraçao de nome, senha e numero
+
+
+
+
+
+
+
+                             -TESTES SERIVOR PHP E MYSQL-
+
+--userAdmBig
+--secsistemas37666451829369Rr@
+
+--userAdm
+--secsistemas37666451829369Rr@w 
+
+--vamos criar um id diferente como se fosse uma chave numerica, quase impossivel de chutar o id admin ate acertar
+
+
+('João da Silva', 'senhaCriptografada123', 'TI'),
+
+('Maria Oliveira', 'senhaCriptografada456', 'ADMINISTRATIVO');
+
+--senhas pra entrar em contas
+
+cd "C:\Users\rodri\Downloads\PROJETO CHAMADO TI\back"
+cd "C:\Users\rodrigo\Downloads\PROJETO CHAMADO TI\back"
+php -S localhost:8001 index.php
+live server
+
+& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u userAdm -p
+userAdm
+secsistemas37666451829369Rr@
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+8 dominio(visoluxti) e hostigator
+
+
+
+
+
+
+
+*ligar apis com display da pg / teste local com server php e bc local
+         -pg abrir chamados
+                popup ediçao
+                abrir chamado(salvando sem foto)
+         
+
+
+
+
+
+
+
+IMPLEMENTAR LOGICA DE BLOQUEIO DE PAGINA COM VALIDARADMINEXIBIÇAO USER = valida se quem quer acessar a pg tem id  e se for admin, endpoints ja sao verifcados internamente por validaçao de id admin e existencia de id comum
+
+criar escapes contra xss
+
+NO FRONT END, para ofuscament de endpoints:
+✔️ Minificação
+✔️ Ofuscação simples
+✔️ Compressão
+✔️ Bundling
+✔️ Hashing de arquivos
+✔️ Otimização automática
+
+
+
+
+
+
+
+
+
+

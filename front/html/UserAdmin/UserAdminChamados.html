@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <link rel="icon" type="image/png" href="../../icon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="../../icon/favicon.svg">
+    <link rel="shortcut icon" href="../../icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../icon/apple-touch-icon.png">
+    <link rel="manifest" href="../../icon/site.webmanifest">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Visolux TI</title>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+
+
+    <header>
+        <img src="../../img/logo-x.png" alt="Logo da visolux" width="40" height="40" class="logo-img">
+        <div class="logo">VISOLUX TI</div>
+        <ul class="nav-links">
+            <li><a href="UserAdminChamados.html">CHAMADOS</a></li>
+            <li><a href="UserAdminAbrirChamados.html">ABRIR CHAMADO</a></li>
+            <li><a href="UserAdminUsuarios.html">USUARIOS</a></li>
+        </ul>
+        <button class="user-btn" id="userBtn">
+            <img src="../../img/user.png" alt="Logo do User" class="user-icon">
+        </button>
+    </header>
+
+
+
+
+    <div class="popup-overlay" id="popupOverlay">
+
+        <div class="popupEditarUserComum">
+            <button class="close-btnX" id="closePopup">X</button>
+
+            <h3>Editar Usuário</h3>
+            <input type="number" placeholder="Novo Numero">
+            <input type="password" placeholder="Nova senha">
+            <div>
+                <button class="save-btn" id="alterarUser">Salvar</button>
+                <div class="popup-deslogar">
+                    <button class="logout-btn" id="logoutBtn">Encerrar Sessão</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <main>
+
+        <div class="container1Admin" id="yourCalls">
+            <div class="titulo-filtros">
+                <h3>CHAMADOS</h3>
+                <div class="filtroC-btn-container">
+                    <button type="button" id="btnAbertos" class="filtroC-btn">ABERTOS</button>
+                    <button type="button" id="btnFinalizados" class="filtroC-btn">FINALIZADOS</button>
+                </div>
+            </div>
+
+            <form class="search-bar" id="formPesquisa">
+                <input type="text" id="campoPesquisa" placeholder="Pesquisar por" required>
+
+
+                <button type="submit">🔎</button>
+                <button type="button" id="refreshBtn">🔄</button>
+                <button type="button" id="btnSortDate" title="Ordenar por data">▼</button>
+                <span id="contadorPesquisa" class="contador-pesquisa"></span>
+
+            </form>
+
+            <div class="call-listAdmin" id="listaChamados">
+
+            </div>
+
+        </div>
+
+
+        <div class="container2Admin" id="openCall">
+            <h2 id="callTitle">EDIÇÃO DE CHAMADO</h2>
+            <form id="formEditarChamado" enctype="multipart/form-data">
+                <div class="campoinfoAdmin">
+                    <div>
+                        <label for="nomeUsuario">Nome:</label>
+                        <input type="text" id="nomeUsuario" name="nomeUsuario">
+                    </div>
+                    <div>
+                        <label for="numeroChamado">Telefone:</label>
+                        <input type="text" id="numeroChamado" name="numeroChamado">
+                    </div>
+                    <div>
+                        <label for="idChamado">ID:</label>
+                        <input type="text" id="idChamado" name="idChamado" readonly>
+                    </div>
+                    <div class="form-group-setor">
+                        <label for="setor">Setor:</label>
+                        <select id="setor" name="setor" required>
+                            <option value="" disabled selected>Selecione o Setor</option>
+
+                            <option value="TI">TI</option>
+                            <option value="ACRILICO">ACRÍLICO</option>
+                            <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
+                            <option value="ALMOXARIFADO">ALMOXARIFADO</option>
+                            <option value="ALMOXARIFADO_FERRAGENS">ALMOXARIFADO FERRAGENS</option>
+                            <option value="COMERCIAL">COMERCIAL</option>
+                            <option value="COMPRAS">COMPRAS</option>
+                            <option value="ELETRICA">ELÉTRICA</option>
+                            <option value="EMBALAGENS">EMBALAGENS</option>
+                            <option value="EXPEDICAO">EXPEDIÇÃO</option>
+                            <option value="FATURAMENTO">FATURAMENTO</option>
+                            <option value="FINANCEIRO">FINANCEIRO</option>
+                            <option value="FUNILARIA">FUNILARIA</option>
+                            <option value="IMPRESSAO">IMPRESSÃO</option>
+                            <option value="OPERACIONAL">OPERACIONAL</option>
+                            <option value="PCP">PCP</option>
+                            <option value="PELICULA">PELÍCULA</option>
+                            <option value="PINTURA">PINTURA</option>
+                            <option value="PLOTER">PLOTER</option>
+                            <option value="PROCESSOS">PROCESSOS</option>
+                            <option value="PROJETO">PROJETO</option>
+                            <option value="QUALIDADE">QUALIDADE</option>
+                            <option value="RECEPCAO">RECEPÇÃO</option>
+                            <option value="RECORTE">RECORTE</option>
+                            <option value="RH">RH</option>
+                            <option value="SERRALHERIA">SERRALHERIA</option>
+                            <option value="SESMT_OPERACIONAL">SESMT OPERACIONAL</option>
+                            <option value="SEM SETOR">SEM SETOR</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="dataChamado">Data:</label>
+                        <input type="date" name="dataChamado" id="dataChamado">
+                    </div>
+                    <div>
+                        <label for="callType">Tipo de Chamado:</label>
+                        <select name="callType" id="callType" required>
+                            <option value="" disabled selected>Selecione o tipo de problema</option>
+                            <option value="internet">Internet</option>
+                            <option value="impressora">Impressora</option>
+                            <option value="computador">Computador</option>
+                            <option value="sistema">Sistema</option>
+                            <option value="monitor">Monitor</option>
+                            <option value="celular">Celular</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="description">Descrição:</label>
+                        <textarea name="description" id="description" required></textarea>
+                    </div>
+                    <div class="form-group-status">
+                        <label for="status">Status:</label>
+                        <select id="status" name="status" required>
+                            <option value="" disabled selected>--- Escolha o Status ---</option>
+
+                            <option value="aberto">Aberto</option>
+
+                            <option value="finalizado">Finalizado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="campofotoAdmin">
+                    <div>
+                        <label>Fotos (JPG e PNG • Máximo 6)</label>
+
+                        <div class="upload-areaAdmin" id="uploadAreaForm">
+                            <div class="upload-placeholder upload-placeholderForm">
+                                <span style="color: blue; cursor: pointer;">📁 Arraste imagens aqui ou clique para
+                                    selecionar</span>
+                                <input type="file" id="fileInputForm" multiple accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+
+                        <div class="imagens-preview" id="imagensPreviewForm"></div>
+                    </div>
+                </div>
+                <div class="acoes-formAdmin">
+                    <button type="button" id="btnDeletar" class="submit-btnAdmin deletar">🗑️ Deletar</button>
+                    <button type="button" id="btnStatusAction" class="submit-btnAdmin status-action-btn finalizar">✅
+                        Finalizar</button>
+                    <button type="button" class="submit-btnAdmin limpar">🔄 Refresh </button>
+                    <button type="button" id="btnSalvar" class="submit-btnAdmin salvar">💾 Salvar </button>
+                </div>
+            </form>
+        </div>
+
+
+        <div>
+        </div>
+
+    </main>
+
+    <footer>
+        © 2025 VISOLUX & THOR — Todos os direitos reservados
+    </footer>
+
+    <div id="modalImagem" class="modal-imagemAdmin">
+        <span class="fechar-modalAdmin">&times;</span>
+        <div class="modal-navegacaoAdmin">
+            <button class="modal-btn-prev" id="modalPrev">⬅</button>
+            <button class="modal-btn-next" id="modalNext">⮕</button>
+        </div>
+        <div class="modal-contadorAdmin" id="modalContador">1 / 4</div>
+        <img class="conteudo-modalAdmin" id="imagemAmpliada">
+    </div>
+
+
+    <script>
+
+
+        let todosChamados = [];
+        const API_URL = 'http://localhost:8001/api';
+        const openCallContainer = document.getElementById("openCall");
+        const formEditarChamado = document.getElementById("formEditarChamado");
+        const previewContainerForm = document.getElementById("imagensPreviewForm");
+        const callTitle = document.getElementById("callTitle");
+
+        const btnDeletar = document.getElementById('btnDeletar');
+        const btnStatusAction = document.getElementById('btnStatusAction');
+        const btnSalvar = document.getElementById('btnSalvar');
+        const uploadArea = document.getElementById("uploadAreaForm");
+
+        const inputsEditaveis = [
+            '#nomeUsuario', '#numeroChamado', '#setor',
+            '#dataChamado', '#callType', '#description', '#status'
+        ];
+
+
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const userId = localStorage.getItem("userId");
+
+            if (!userId) {
+                window.location.href = "../login.html";
+                return;
+            }
+
+            CarregarTodosChamados(userId);
+            const btnLimpar = document.querySelector('.submit-btnAdmin.limpar');
+            configurarPopupUsuario(userId);
+            configurarFiltros();
+            configurarPesquisa();
+            iniciarArea({
+                uploadArea: uploadArea,
+                fileInput: document.getElementById("fileInputForm"),
+                previewContainer: previewContainerForm
+            });
+            configurarModalImagem();
+        });
+
+
+
+        async function CarregarTodosChamados(userId) {
+            try {
+                const response = await fetch(`${API_URL}/getAllChamadosAdmin?idUserSession=${userId}`);
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                const data = await response.json();
+                if (data.success && Array.isArray(data.data)) {
+                    todosChamados = data.data;
+                    renderizarTodosChamados(todosChamados);
+                    atualizarPlaceholderContador(todosChamados.length);
+                    if (todosChamados.length > 0) {
+                        const primeiroChamadoId = todosChamados[0].id_chamado;
+                        abrirPopupChamado(primeiroChamadoId);
+                    }
+                } else {
+                    console.error("❌ Erro no retorno da API:", data.message || data);
+                }
+            } catch (error) {
+                console.error("Erro ao carregar chamados:", error);
+            }
+        }
+
+
+
+
+        function formatarDataChamado(dataStr) {
+            if (!dataStr) return "—";
+            const data = new Date(dataStr);
+            if (isNaN(data.getTime())) return "—";
+            return data.toISOString().split("T")[0];
+        }
+
+        function renderizarTodosChamados(chamados) {
+            const lista = document.getElementById("listaChamados");
+            lista.innerHTML = "";
+
+            if (!chamados.length) {
+                lista.innerHTML = "<p>Nenhum chamado encontrado.</p>";
+                return;
+            }
+
+            chamados.forEach(c => {
+                const div = document.createElement("div");
+                div.classList.add("call-itemAdmin");
+                const statusChamado = (c.status || "").toLowerCase();
+
+                if (statusChamado === "aberto") {
+                    div.classList.add("chamado-aberto"); // Define a cor amarela
+                } else if (statusChamado === "finalizado") {
+                    div.classList.add("chamado-finalizado"); // Define a cor verde
+                }
+                const tipo = (c.tipo || "—").toUpperCase();
+                const nome = (c.nome || c.numero || "—").toUpperCase();
+                const setor = (c.setor || "—").toUpperCase();
+                const data = formatarDataChamado(c.data);
+                const idChamado = c.id_chamado || "—"; // Pega o ID
+                div.innerHTML = `
+                <span>#${idChamado}</span>
+                    <span>${tipo}</span>
+                    <span>${nome}</span>
+                    <span>${setor}</span>
+                    <span>${data}</span>
+                `;
+                div.addEventListener("click", () => abrirPopupChamado(c.id_chamado));
+                lista.appendChild(div);
+            });
+        }
+
+
+        async function abrirPopupChamado(idChamado) {
+            try {
+                const userId = localStorage.getItem("userId");
+                const response = await fetch(`${API_URL}/getChamadoById?id=${userId}&idChamado=${idChamado}`);
+
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                const data = await response.json();
+
+                if (!data.success || !data.data) {
+                    console.error("Erro ao buscar chamado:", data.message || data);
+                    return;
+                }
+
+                const chamado = data.data;
+                const statusChamado = (chamado.status || "").toLowerCase();
+
+                preencherFormulario(chamado);
+
+                carregarImagensChamado(chamado);
+
+                configurarInterfacePorStatus(statusChamado);
+
+                openCallContainer.style.display = "block";
+                ativarModalNoContainer(previewContainerForm);
+
+            } catch (error) {
+                console.error("Erro ao abrir popup do chamado:", error);
+            }
+        }
+
+        function preencherFormulario(chamado) {
+            formEditarChamado.querySelector("#nomeUsuario").value = chamado.nome || "";
+            formEditarChamado.querySelector("#numeroChamado").value = chamado.numero || "";
+            formEditarChamado.querySelector("#idChamado").value = chamado.id_chamado || "";
+            formEditarChamado.querySelector("#setor").value = chamado.setor || "";
+
+            const status = (chamado.status || "").toLowerCase();
+            formEditarChamado.querySelector("#status").value = status;
+
+            if (chamado.data) {
+                const dataObj = new Date(chamado.data);
+                formEditarChamado.querySelector("#dataChamado").value = dataObj.toISOString().split("T")[0];
+            } else {
+                formEditarChamado.querySelector("#dataChamado").value = "";
+            }
+
+            formEditarChamado.querySelector("#callType").value = chamado.tipo || "";
+            formEditarChamado.querySelector("#description").value = chamado.descricao || "";
+        }
+
+        function carregarImagensChamado(chamado) {
+
+            limparImagensParaDeletar();
+            previewContainerForm.innerHTML = "";
+            const fileInput = document.getElementById("fileInputForm");
+            if (fileInput) {
+                fileInput.value = "";
+            }
+            const imagens = [
+                chamado.imagem1, chamado.imagem2, chamado.imagem3,
+                chamado.imagem4, chamado.imagem5, chamado.imagem6,
+            ].filter(img => img);
+
+            imagens.forEach(src => {
+                const div = document.createElement("div");
+                div.className = "imagem-preview-item";
+                div.setAttribute('data-base64', src);
+
+                div.innerHTML = `
+                    <img src="data:image/jpeg;base64,${src}">
+                    <button type="button" class="remover-imagem">×</button>
+                `;
+
+                previewContainerForm.appendChild(div);
+            });
+        }
+
+        function setupConfirmationButton(button, defaultText, confirmText, defaultColor, confirmColor, actionCallback) {
+            if (!button) return;
+
+            // Reset state immediately
+            button.textContent = defaultText;
+            button.style.backgroundColor = defaultColor || '';
+            button.classList.remove('confirm-action');
+
+            if (button._resetTimer) clearTimeout(button._resetTimer);
+
+            button.onclick = function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (button.classList.contains('confirm-action')) {
+                    actionCallback();
+
+                    button.classList.remove('confirm-action');
+                    button.textContent = defaultText;
+                    button.style.backgroundColor = defaultColor || '';
+                    if (button._resetTimer) clearTimeout(button._resetTimer);
+                } else {
+                    button.classList.add('confirm-action');
+                    button.textContent = confirmText;
+                    button.style.backgroundColor = confirmColor;
+
+                    button._resetTimer = setTimeout(() => {
+                        button.classList.remove('confirm-action');
+                        button.textContent = defaultText;
+                        button.style.backgroundColor = defaultColor || '';
+                    }, 3000);
+                }
+            };
+        }
+
+        function configurarInterfacePorStatus(status) {
+            const isFinalizado = status === 'finalizado';
+            const fileInput = document.getElementById("fileInputForm");
+            const btnLimpar = document.querySelector('.submit-btnAdmin.limpar');
+
+            if (callTitle) {
+                callTitle.textContent = isFinalizado ? "EDIÇÃO DE CHAMADO (FINALIZADO)" : "EDIÇÃO DE CHAMADO (ABERTO)";
+            }
+            if (btnLimpar) {
+                btnLimpar.style.display = isFinalizado ? 'none' : 'block';
+            }
+
+            inputsEditaveis.forEach(selector => {
+                const input = formEditarChamado.querySelector(selector);
+                if (input && input.id !== 'idChamado') {
+                    input.disabled = isFinalizado;
+                }
+            });
+
+            if (uploadArea) {
+                uploadArea.style.pointerEvents = isFinalizado ? 'none' : 'auto';
+                uploadArea.style.opacity = isFinalizado ? '0.6' : '1';
+            }
+
+            if (fileInput) {
+                fileInput.disabled = isFinalizado;
+            }
+
+            if (btnStatusAction) {
+                if (isFinalizado) {
+                    btnStatusAction.classList.remove('finalizar');
+                    btnStatusAction.classList.add('reabrir');
+                    const idChamadoParaReabrir = formEditarChamado.querySelector("#idChamado").value;
+
+                    setupConfirmationButton(
+                        btnStatusAction,
+                        'Reabrir Chamado',
+                        'Confirmar',
+                        '',
+                        '#ffc107',
+                        () => reabrirChamado(idChamadoParaReabrir)
+                    );
+
+                } else {
+                    btnStatusAction.classList.remove('reabrir');
+                    btnStatusAction.classList.add('finalizar');
+
+                    setupConfirmationButton(
+                        btnStatusAction,
+                        '✅ Finalizar',
+                        'Confirmar',
+                        '',
+                        '#28a745',
+                        () => {
+                            formEditarChamado.querySelector("#status").value = 'finalizado';
+                            salvarChamadoAbertoAdmin();
+                        }
+                    );
+                }
+            }
+
+            if (btnSalvar) {
+                if (isFinalizado) {
+                    btnSalvar.style.display = 'none';
+                } else {
+                    btnSalvar.style.display = 'block';
+                    setupConfirmationButton(
+                        btnSalvar,
+                        '💾 Salvar',
+                        'Confirmar',
+                        '',
+                        '#007bff',
+                        salvarChamadoAbertoAdmin
+                    );
+                }
+            }
+
+            if (isFinalizado) {
+                previewContainerForm.querySelectorAll(".remover-imagem").forEach(btn => btn.style.display = 'none');
+            } else {
+                previewContainerForm.querySelectorAll(".remover-imagem").forEach(btn => {
+                    btn.style.display = 'block';
+                    btn.onclick = () => {
+                        const divPai = btn.parentElement;
+                        const base64Src = divPai.getAttribute('data-base64');
+
+                        if (base64Src && !imagensParaDeletar.includes(base64Src)) {
+                            imagensParaDeletar.push(base64Src);
+                        }
+                        divPai.remove();
+                    };
+                });
+            }
+
+            const idChamadoParaDeletar = formEditarChamado.querySelector("#idChamado").value;
+            if (btnDeletar) {
+                setupConfirmationButton(
+                    btnDeletar,
+                    '🗑️ Deletar',
+                    'Confirmar',
+                    '',
+                    '#dc3545',
+                    () => deletarChamado(idChamadoParaDeletar)
+                );
+            }
+        }
+
+        function configurarPopupUsuario(idUser) {
+            const userBtn = document.getElementById('userBtn');
+            const popupOverlay = document.getElementById('popupOverlay');
+            const closePopup = document.getElementById('closePopup');
+            const alterarUser = document.getElementById('alterarUser');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            userBtn.addEventListener('click', () => popupOverlay.style.display = 'flex');
+            closePopup.addEventListener('click', () => popupOverlay.style.display = 'none');
+            window.addEventListener('click', (e) => { if (e.target === popupOverlay) popupOverlay.style.display = 'none'; });
+
+            if (alterarUser) {
+                alterarUser.addEventListener('click', () => {
+                    const numero = popupOverlay.querySelector('input[placeholder="Novo Numero"]').value.trim();
+                    const senha = popupOverlay.querySelector('input[placeholder="Nova senha"]').value.trim();
+                    if (!numero && !senha) { alert("Preencha pelo menos um campo!"); return; }
+
+                    const formData = new FormData();
+                    formData.append('idUser', idUser);
+                    if (numero) formData.append('telefone_user', numero);
+                    if (senha) formData.append('senha_user', senha);
+
+                    fetch(`${API_URL}/updateUserPopUp`, { method: 'POST', body: formData })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) { alert('Usuário atualizado com sucesso!'); }
+                            else { alert('Erro: ' + (data.message || 'Não foi possível atualizar')); }
+                        })
+                        .catch(err => { console.error('Erro no fetch:', err); alert('Erro ao conectar'); });
+                });
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', encerrarSessao);
+            }
+
+            document.querySelector('.submit-btnAdmin.limpar').addEventListener('click', function () {
+                const idChamadoAtual = formEditarChamado.querySelector("#idChamado").value;
+
+                if (idChamadoAtual) {
+                    abrirPopupChamado(idChamadoAtual);
+                } else {
+                    location.reload();
+                }
+            });
+        }
+
+        function configurarFiltros() {
+            const filtroBtns = Array.from(document.querySelectorAll('.filtroC-btn'));
+            const refreshBtn = document.getElementById("refreshBtn");
+            let currentFilter = null;
+
+            function aplicarFiltroAtual() {
+                let listaParaRender = todosChamados;
+                if (currentFilter === "aberto") {
+                    listaParaRender = todosChamados.filter(c => (c.status || "").toLowerCase() === "aberto");
+                } else if (currentFilter === "finalizado") {
+                    listaParaRender = todosChamados.filter(c => (c.status || "").toLowerCase() === "finalizado");
+                }
+                renderizarTodosChamados(listaParaRender);
+            }
+
+            filtroBtns.forEach((btn, idx) => {
+                btn.addEventListener('click', () => {
+                    const wasActive = btn.classList.contains('active');
+                    filtroBtns.forEach(b => b.classList.remove('active'));
+
+                    if (wasActive) { currentFilter = null; }
+                    else {
+                        btn.classList.add('active');
+                        currentFilter = (idx === 0) ? "aberto" : "finalizado";
+                    }
+                    aplicarFiltroAtual();
+                });
+            });
+
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', () => {
+                    document.getElementById("campoPesquisa").value = "";
+                    currentFilter = null;
+                    filtroBtns.forEach(b => b.classList.remove('active'));
+                    renderizarTodosChamados(todosChamados);
+                });
+            }
+
+            const btnSortDate = document.getElementById('btnSortDate');
+            let isNewestFirst = true;
+
+            if (btnSortDate) {
+                btnSortDate.addEventListener('click', () => {
+                    isNewestFirst = !isNewestFirst;
+                    btnSortDate.textContent = isNewestFirst ? "▼" : "▲";
+
+                    todosChamados.sort((a, b) => {
+                        const dateA = new Date(a.data);
+                        const dateB = new Date(b.data);
+                        return isNewestFirst ? dateB - dateA : dateA - dateB;
+                    });
+
+                    aplicarFiltroAtual();
+                });
+            }
+        }
+
+        function configurarPesquisa() {
+            const formPesquisa = document.getElementById("formPesquisa");
+            const campoPesquisa = document.getElementById("campoPesquisa");
+            const listaChamados = document.getElementById("listaChamados");
+            const contadorElement = document.getElementById("contadorPesquisa");
+
+            if (!formPesquisa || !listaChamados || !contadorElement) return;
+
+            const executarPesquisa = (event) => {
+                if (event && event.type === 'submit') {
+                    event.preventDefault();
+                }
+
+                const termo = campoPesquisa.value.trim().toUpperCase();
+
+                document.querySelectorAll('.filtroC-btn').forEach(b => b.classList.remove('active'));
+
+                const chamados = listaChamados.querySelectorAll(".call-itemAdmin");
+                let resultadosEncontrados = 0;
+
+                if (termo === "") {
+                    chamados.forEach(chamado => {
+                        chamado.style.display = "";
+                    });
+                    contadorElement.textContent = "";
+                    return;
+                }
+
+                chamados.forEach(chamado => {
+                    const spans = chamado.querySelectorAll("span");
+                    let encontrou = false;
+
+                    spans.forEach(s => {
+                        let textoSpan = s.textContent.toUpperCase();
+
+                        if (textoSpan.includes(termo)) {
+                            encontrou = true;
+                        }
+                    });
+
+                    if (encontrou) {
+                        chamado.style.display = "";
+                        resultadosEncontrados++;
+                    } else {
+                        chamado.style.display = "none";
+                    }
+                });
+                if (termo.length > 0) {
+                    contadorElement.textContent = `  (${resultadosEncontrados} encontrado${resultadosEncontrados !== 1 ? 's' : ''})`;
+                } else {
+                    contadorElement.textContent = "";
+                }
+            };
+
+            formPesquisa.addEventListener('submit', executarPesquisa);
+            campoPesquisa.addEventListener('input', executarPesquisa);
+        }
+
+        function encerrarSessao() {
+            const btn = document.getElementById('logoutBtn');
+            try {
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userId');
+                sessionStorage.clear();
+                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                btn.innerHTML = '✅ Sessão Encerrada';
+                btn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+
+                setTimeout(() => { window.location.href = '../login.html'; }, 1000);
+            } catch (error) {
+                console.error('Erro ao encerrar sessão:', error);
+                btn.innerHTML = '❌ Erro ao Sair';
+                btn.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+                setTimeout(() => { window.location.href = '../login.html'; }, 1500);
+            }
+        }
+
+        const modalImagem = document.getElementById("modalImagem");
+        const imagemAmpliada = document.getElementById("imagemAmpliada");
+        const fecharModal = document.querySelector(".fechar-modalAdmin");
+        const modalPrev = document.getElementById("modalPrev");
+        const modalNext = document.getElementById("modalNext");
+        const modalContador = document.getElementById("modalContador");
+        let modalListaAtual = [];
+        let modalIndexAtual = 0;
+        let imagensParaDeletar = [];
+
+        function limparImagensParaDeletar() {
+            imagensParaDeletar = [];
+        }
+        function abrirModalContainer(listaImgs, index) {
+            modalListaAtual = listaImgs.map(img => img.src);
+            modalIndexAtual = index;
+            imagemAmpliada.src = modalListaAtual[modalIndexAtual];
+            modalContador.textContent = `${modalIndexAtual + 1} / ${modalListaAtual.length}`;
+            modalImagem.style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+
+        function fecharModalFunc() {
+            modalImagem.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        function configurarModalImagem() {
+            if (fecharModal) fecharModal.onclick = fecharModalFunc;
+            if (modalImagem) modalImagem.onclick = e => { if (e.target === modalImagem) fecharModalFunc(); };
+            document.addEventListener("keydown", e => { if (e.key === "Escape") fecharModalFunc(); });
+
+            if (modalNext) {
+                modalNext.onclick = e => {
+                    e.stopPropagation();
+                    modalIndexAtual = (modalIndexAtual + 1) % modalListaAtual.length;
+                    imagemAmpliada.src = modalListaAtual[modalIndexAtual];
+                    modalContador.textContent = `${modalIndexAtual + 1} / ${modalListaAtual.length}`;
+                };
+            }
+
+            if (modalPrev) {
+                modalPrev.onclick = e => {
+                    e.stopPropagation();
+                    modalIndexAtual = (modalIndexAtual - 1 + modalListaAtual.length) % modalListaAtual.length;
+                    imagemAmpliada.src = modalListaAtual[modalIndexAtual];
+                    modalContador.textContent = `${modalIndexAtual + 1} / ${modalListaAtual.length}`;
+                };
+            }
+        }
+
+        function ativarModalNoContainer(previewContainer) {
+            previewContainer.removeEventListener("click", handleImageClick);
+            previewContainer.addEventListener("click", handleImageClick);
+        }
+
+        function handleImageClick(e) {
+            if (e.target.tagName === "IMG") {
+                const imagens = [...e.currentTarget.querySelectorAll("img")];
+                const index = imagens.indexOf(e.target);
+                abrirModalContainer(imagens, index);
+            }
+        }
+
+        function iniciarUploadImagens(config) {
+            const { uploadArea, fileInput, previewContainer } = config;
+
+            function criarPreview(src) {
+                const bloco = document.createElement("div");
+                bloco.className = "imagem-preview-item";
+                bloco.innerHTML = `<img src="${src}"><button type="button" class="remover-imagem">×</button>`;
+                return bloco;
+            }
+
+            function processarArquivos(arquivos) {
+                if (uploadArea.style.pointerEvents === 'none') return;
+                const totalAtual = previewContainer.children.length;
+                const totalNovas = arquivos.length;
+
+                if (totalAtual + totalNovas > 6) { alert("Máximo permitido: 6 imagens."); return; }
+
+                [...arquivos].forEach(file => {
+                    if (!file.type.startsWith("image/")) return;
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        const preview = criarPreview(e.target.result);
+                        previewContainer.appendChild(preview);
+                        preview.querySelector(".remover-imagem").onclick = () => preview.remove();
+                    };
+                    reader.readAsDataURL(file);
+                });
+                ativarModalNoContainer(previewContainer);
+            }
+
+            uploadArea.addEventListener("click", () => fileInput.click());
+            fileInput.addEventListener("change", e => processarArquivos(e.target.files));
+            uploadArea.addEventListener("dragover", e => { e.preventDefault(); uploadArea.classList.add("hover"); });
+            uploadArea.addEventListener("dragleave", () => { uploadArea.classList.remove("hover"); });
+            uploadArea.addEventListener("drop", e => { e.preventDefault(); uploadArea.classList.remove("hover"); processarArquivos(e.dataTransfer.files); });
+        }
+
+        function iniciarArea(config) {
+            iniciarUploadImagens(config);
+        }
+
+        async function deletarChamado(idChamado) {
+            try {
+                const userId = localStorage.getItem("userId");
+                if (!userId) {
+                    alert("Erro: ID de sessão do usuário não encontrado.");
+                    return;
+                }
+
+                const deleteUrl = `${API_URL}/deleteChamado?idChamado=${idChamado}&idUserSession=${userId}`;
+
+                const response = await fetch(deleteUrl, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: `Erro HTTP: ${response.status}` }));
+                    throw new Error(errorData.message || `Falha ao deletar chamado: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Chamado deletado com sucesso.`);
+                    location.reload();
+                } else {
+                    alert(`❌ Erro da API: ${data.message || 'Falha desconhecida ao deletar.'}`);
+                }
+
+            } catch (error) {
+                console.error("Erro ao realizar o DELETE:", error);
+                alert(`Ocorreu um erro: ${error.message}`);
+            }
+        }
+
+        async function reabrirChamado(idChamado) {
+            try {
+                const userId = localStorage.getItem("userId");
+                if (!userId) {
+                    alert("Erro: ID de sessão do usuário não encontrado.");
+                    return;
+                }
+                const formData = new FormData();
+                formData.append('idUser', userId);
+                formData.append('idChamado', idChamado);
+
+                const response = await fetch(`${API_URL}/reabrirChamadoAdmin`, {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: `Erro HTTP: ${response.status}` }));
+                    throw new Error(errorData.message || `Falha ao reabrir chamado: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.success) {
+                    await CarregarTodosChamados(userId);
+
+                    await abrirPopupChamado(idChamado);
+                } else {
+                    alert(`❌ Erro da API: ${data.message || 'Falha desconhecida ao reabrir.'}`);
+                }
+            } catch (error) {
+                console.error("Erro ao reabrir chamado:", error);
+                alert(`Ocorreu um erro ao reabrir: ${error.message}`);
+            }
+        }
+
+        async function salvarChamadoAbertoAdmin() {
+            const userId = localStorage.getItem("userId");
+            const idChamado = formEditarChamado.querySelector("#idChamado").value;
+            if (!userId || !idChamado) {
+                alert("Erro: ID de usuário ou ID do chamado não encontrado.");
+                return;
+            }
+            const formData = new FormData(formEditarChamado);
+            formData.append('idUser', userId);
+            formData.append('imagensParaDeletar', JSON.stringify(imagensParaDeletar));
+            const fileInput = document.getElementById("fileInputForm");
+            if (fileInput.files.length > 0) {
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    formData.append(`novasImagens[]`, fileInput.files[i]);
+                }
+            }
+            try {
+                const response = await fetch(`${API_URL}/updateChamadoAbertoAdmin`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: `Erro HTTP: ${response.status}` }));
+                    throw new Error(errorData.message || `Falha ao salvar o chamado: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Chamado #${idChamado} atualizado com sucesso!`);
+
+                    previewContainerForm.innerHTML = "";
+                    formEditarChamado.reset();
+
+                    await CarregarTodosChamados(userId);
+
+                    await abrirPopupChamado(idChamado);
+
+                    limparImagensParaDeletar();
+                } else {
+                    alert(`❌ Erro da API: ${data.message || 'Falha desconhecida ao salvar.'}`);
+                }
+
+            } catch (error) {
+                console.error("Erro ao salvar chamado:", error);
+                alert(`Ocorreu um erro ao salvar: ${error.message}`);
+            }
+        }
+
+        function atualizarPlaceholderContador(total) {
+            const campoPesquisa = document.getElementById("campoPesquisa");
+            if (campoPesquisa) {
+                const novoPlaceholder = `(Total: ${total} chamados)`;
+                campoPesquisa.placeholder = novoPlaceholder;
+            }
+        }
+    </script>
+    <style>
+        .call-listAdmin .call-itemAdmin span:nth-child(1) {
+            flex: 0 0 50px;
+        }
+
+        .call-listAdmin .call-itemAdmin span:nth-child(2) {
+            flex: 0 0 120px;
+        }
+
+        .call-listAdmin .call-itemAdmin span:nth-child(3) {
+            flex: 0 0 150px;
+        }
+
+        .call-listAdmin .call-itemAdmin span:nth-child(4) {
+            flex: 0 0 130px;
+        }
+
+        .call-listAdmin .call-itemAdmin span:nth-child(5) {
+            flex: 0 0 100px;
+            text-align: right;
+            padding-right: 0;
+        }
+
+        .close-btnX {
+            position: absolute;
+            top: -35px;
+            right: -35px;
+            color: #dc3545;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+            background-color: none;
+        }
+
+
+        .call-itemAdmin {
+            transition: background-color 0.3s ease;
+        }
+
+        .chamado-aberto {
+            background-color: #f8f0ab !important;
+            border-right: 5px solid #ffc107;
+        }
+
+        .chamado-finalizado {
+            background-color: #aafab1bb !important;
+            border-right: 5px solid #4caf50;
+        }
+
+        main {
+            gap: 30px;
+        }
+
+        .container1Admin {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(6, 26, 202, 0.795);
+            padding: 20px;
+            flex: 1 1 300px;
+            width: 650px;
+            max-width: none;
+            margin-left: 15px;
+            height: auto;
+            max-width: 660;
+
+        }
+.search-bar {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin: 20px auto;
+
+}
+        .container2Admin {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(6, 26, 202, 0.795);
+            padding: 20px;
+            max-width: 750px;
+            height: auto;
+            margin-right: 15px;
+
+        }
+    </style>
+
+</body>
+<script src="../../js/urls-amigaveis.js"></script>
+
+</html>

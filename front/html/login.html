@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <link rel="icon" type="image/png" href="../icon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="../icon/favicon.svg">
+  <link rel="shortcut icon" href="../icon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../icon/apple-touch-icon.png">
+  <link rel="manifest" href="../icon/site.webmanifest">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Visolux TI</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+
+  <header>
+    <img src="../img/logo-x.png" alt="Logo da Visolux" width="40" height="40" class="logo-img">
+    <div class="logo">VISOLUX TI</div>
+    <img src="../img/logo-x.png" alt="Logo da Visolux" width="40" height="40" class="logo-img">
+  </header>
+
+  <main>
+    <div class="login-container">
+      <h2>Login de Acesso</h2>
+      <form id="loginForm">
+        <label for="nome">Nome Completo:</label>
+        <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+        <button type="submit" class="submit-Login">Entrar</button>
+      </form>
+
+    </div>
+  </main>
+
+  <footer>
+    © 2025 VISOLUX & THOR — Todos os direitos reservados
+  </footer>
+
+  <script>
+const form = document.getElementById('loginForm');
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = form.nome.value.trim();
+    const senha = form.senha.value.trim();
+
+    if (!nome || !senha) {
+        alert("Preencha todos os campos!");
+        return;
+    }
+    try {
+        const loginResponse = await fetch("http://localhost:8001/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nome, senha }) 
+        });
+        const responseText = await loginResponse.text();
+        if (!loginResponse.ok) {
+            console.error("Erro HTTP:", loginResponse.status);
+            alert("Credenciais inválidas.");
+            return;
+        }
+        let loginData;
+        try {
+            loginData = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error("Erro ao parsear JSON:", parseError);
+            alert("Resposta inválida do servidor");
+            return;
+        }
+        ///IMPLEMENTAR LOGICA DE BLOQUEIO DE PAGINA COM VALIDARADMINEXIBIÇAO USER = valida se quem quer acessar a pg tem id  e se for user blz, endpoints ja sao verifcados por validaçao de id admin e existencia de id comum
+        if (loginData.success) {
+              localStorage.setItem("userId", loginData.id);
+
+            if (loginData.isAdmin) {
+                window.location.href = "../html/UserAdmin/UserAdminChamados.html";
+            } else {
+                window.location.href = "../html/UserComum/UserComumAbrirChamado.html";
+            }
+        } else {
+            alert("Credenciais inválidas.");
+        }
+
+    } catch (error) {
+        console.error("Erro na comunicação com o servidor:", error);
+        alert("Erro ao conectar ao servidor.");
+    }
+});
+  </script>
+</body>
+<script src="../js/urls-amigaveis.js"></script>
+</html>

@@ -1,0 +1,38 @@
+     
+
+
+
+
+                            --ETAPAS NO PROCESSO DE SUBIR BANCO LOCAL PRO TERCEIRZADO--
+
+
+
+Na sua máquina (desenvolvimento)
+Você cria seu banco com CREATE DATABASE ..., CREATE TABLE ..., define chaves, índices, relacionamentos, etc.
+Testa tudo com seus scripts SQL + seu front/back-end.
+
+Exportação
+Quando estiver pronto, você gera um dump (um arquivo .sql) com todos os CREATE TABLE, INSERT iniciais (se tiver), etc.
+Esse arquivo é só “o código do banco” que reconstrói a estrutura.
+
+Quando estiver pronto, você gera um dump (um arquivo .sql) com todos os CREATE TABLE, INSERT iniciais (se tiver), etc.
+Esse arquivo é só “o código do banco” que reconstrói a estrutura.
+Se for coisa pequena, só a estrutura → pode colar os comandos na mão ou até salvar em .txt.
+Se for banco real, com tabelas e dados → use o dump oficial (.sql), porque é seguro e fácil de restaurar.
+
+Na hospedagem (produção)
+O provedor já tem um servidor MySQL rodando 24h.
+Você (ou eles, dependendo do contrato) entra no phpMyAdmin, Workbench ou CLI da hospedagem e roda esse script.
+Isso cria as tabelas lá dentro, do mesmo jeitinho que você fez local.
+
+Aplicação rodando
+A partir daí, seu back-end (PHP, Node, Python, etc.) conecta-se ao banco remoto.
+Ele vai usar host, user, senha e nome do banco que a hospedagem fornecer.
+A inserção/consulta/atualização de dados passa a ser responsabilidade do seu back-end, não sua manualmente.
+
+
+
+
+
+
+
