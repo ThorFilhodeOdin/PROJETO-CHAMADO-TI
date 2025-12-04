@@ -155,7 +155,7 @@
 
                     <div>
                         <label for="numeroChamado">Número:</label>
-                        <input type="text" id="numeroChamado" name="numeroChamado">
+                        <input type="number" id="numeroChamado" name="numeroChamado">
                     </div>
                     <div>
                         <label for="dataChamado">Data:</label>
@@ -257,6 +257,7 @@
 
         const API_URL = 'http://localhost:8001/api';
         let todosChamados = [];
+        let uploadedFilesForm = []; // Array para armazenar arquivos do formulário
 
         const modalImagem = document.getElementById("modalImagem");
         const imagemAmpliada = document.getElementById("imagemAmpliada");
@@ -433,8 +434,6 @@
             const description = document.getElementById('description').value;
             const previewContainer = document.getElementById('imagensPreviewForm');
             const userId = localStorage.getItem("userId");
-            const fileInput = document.getElementById('fileInputForm');
-            const files = fileInput ? fileInput.files : [];
             if (!userId) {
                 alert("Erro: ID de usuário não encontrado. Faça login novamente.");
                 return;
@@ -453,23 +452,21 @@
             formData.append('setor', setor);
             formData.append('descricao', description);
 
-            const imagensPreview = previewContainer.querySelectorAll('.imagem-preview-item img');
-
-            for (let i = 0; i < files.length && i < 6; i++) {
-                formData.append("fotos[]", files[i]);
+            // Usar os arquivos armazenados no array global
+            for (let i = 0; i < uploadedFilesForm.length && i < 6; i++) {
+                formData.append("fotos[]", uploadedFilesForm[i]);
             }
 
             console.log("--- Conteúdo do FormData ---");
             for (const pair of formData.entries()) {
-                // Verifica se o valor é um objeto File (uma foto)
                 if (pair[1] instanceof File) {
-                    console.log(pair[0] + ': ' + 'FILE (Nome: ' + pair[1].name + ', Tamanho: ' + pair[1].size + ' bytes)');
+                    console.log(pair[0] + ': ' + 'FILE (Nome: ' + pair[1].name + ', Tipo: ' + pair[1].type + ', Tamanho: ' + pair[1].size + ' bytes)');
                 } else {
-                    // Campos de texto
                     console.log(pair[0] + ': ' + pair[1]);
                 }
             }
             console.log("----------------------------");
+
             try {
                 const response = await fetch(`${API_URL}/createChamadoAdmin`, {
                     method: 'POST',
@@ -482,6 +479,7 @@
                     alert("✅ Chamado aberto com sucesso!");
                     form.reset();
                     previewContainer.innerHTML = '';
+                    uploadedFilesForm = []; // Limpar array de arquivos
                     CarregarTodosChamadosTi(userId);
                 } else {
                     alert(`❌ Erro ao abrir chamado: ${data.message || 'Resposta inválida do servidor.'}`);
@@ -510,9 +508,13 @@
             return bloco;
         }
 
-        function ativarRemocao(container) {
-            container.querySelectorAll(".remover-imagem").forEach(btn => {
+        function ativarRemocao(container, filesArray) {
+            container.querySelectorAll(".remover-imagem").forEach((btn, index) => {
                 btn.onclick = () => {
+                    const itemIndex = Array.from(container.children).indexOf(btn.parentElement);
+                    if (filesArray && itemIndex >= 0 && itemIndex < filesArray.length) {
+                        filesArray.splice(itemIndex, 1);
+                    }
                     btn.parentElement.remove();
                 };
             });
@@ -533,11 +535,14 @@
                 [...arquivos].forEach(file => {
                     if (!file.type.startsWith("image/")) return;
 
+                    // Armazenar o arquivo no array global
+                    uploadedFilesForm.push(file);
+
                     const reader = new FileReader();
                     reader.onload = e => {
                         const preview = criarPreview(e.target.result, true);
                         previewContainer.appendChild(preview);
-                        ativarRemocao(previewContainer);
+                        ativarRemocao(previewContainer, uploadedFilesForm);
                     };
                     reader.readAsDataURL(file);
                 });

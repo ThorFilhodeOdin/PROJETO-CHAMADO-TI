@@ -223,6 +223,8 @@ class ChamadosService
                 }
             }
             $fileData = $data['fotos']['fotos'] ?? $data['fotos'];
+            
+            error_log("DEBUG: createChamadoAdmin - fileData: " . print_r($fileData, true));
 
             $imagens = [];
             if (
@@ -233,15 +235,20 @@ class ChamadosService
                 for ($i = 0; $i < 6; $i++) {
                     $tmpName = $fileData['tmp_name'][$i] ?? null;
                     $error = $fileData['error'][$i] ?? UPLOAD_ERR_NO_FILE;
+                    
+                    error_log("DEBUG: Processing image $i - tmpName: $tmpName, error: $error");
 
                     // 🛑 CRÍTICO: Verifica se o upload foi bem-sucedido e o arquivo existe
                     if ($tmpName && $error === UPLOAD_ERR_OK && is_uploaded_file($tmpName)) {
                         $imagens["imagem" . ($i + 1)] = file_get_contents($tmpName);
+                        error_log("DEBUG: Image $i loaded successfully.");
                     } else {
                         $imagens["imagem" . ($i + 1)] = null;
+                        error_log("DEBUG: Image $i failed or empty.");
                     }
                 }
             } else {
+                error_log("DEBUG: No valid file data found.");
                 // Caso não haja uploads válidos, preenche com null para o Model
                 for ($i = 1; $i <= 6; $i++) {
                     $imagens["imagem{$i}"] = null;
