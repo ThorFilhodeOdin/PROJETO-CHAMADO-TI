@@ -13,7 +13,7 @@ VALUES
 
 DELETE FROM chamados WHERE id_chamado = 21; 
 
-DROP TABLE users;
+DROP TABLE chamados;
 
 ALTER TABLE users
 ADD telefone VARCHAR(15);
@@ -78,7 +78,7 @@ data DATE DEFAULT (CURRENT_DATE),
     'ACRILICO',
     'ADMINISTRATIVO',
     'ALMOXARIFADO',
-    'ALMOXARIFADO_FERRAGENS',
+    'FERRAGENS',
     'COMERCIAL',
     'COMPRAS',
     'ELETRICA',
