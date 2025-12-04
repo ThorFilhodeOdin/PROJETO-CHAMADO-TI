@@ -168,6 +168,15 @@ class routes
         };
 
 
+        $this->routes['GET']['/api/getDetalhesChamado'] = function ($query_params) {
+            $controller = new ChamadosController();
+            $userId = $query_params['idUserSession'] ?? '';
+            return $controller->getChamadoById([
+                'id' => $userId,
+                'idChamado' => $query_params['idChamado'] ?? ''
+            ]);
+        };
+
 
 
         $this->routes['POST']['/api/createChamadoComum'] = function () {

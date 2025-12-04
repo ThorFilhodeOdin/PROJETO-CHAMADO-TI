@@ -169,7 +169,8 @@ secsistemas37666451829369Rr@
 *ligar apis com display da pg / teste local com server php e bc local
          -pg abrir chamados
                 popup ediçao
-
+          -pg chamados 
+                filtro de ti 
 
 
 

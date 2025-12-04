@@ -61,32 +61,31 @@
 
                     <div class="campo-detalhe">
                         <label>Tipo:</label>
-                        <input type="text" id="popupTipoServico" value="Internet">
+                        <input type="text" id="popupTipoServico">
                     </div>
                     <div class="campo-detalhe">
                         <label>Nome:</label>
-                        <input type="text" id="popupSolicitante" value="Carlos Silva">
+                        <input type="text" id="popupSolicitante">
                     </div>
                     <div class="campo-detalhe">
                         <label>Numero:</label>
-                        <input type="text" id="popupNumero" value="(11) 98765-4321">
+                        <input type="text" id="popupNumero">
                     </div>
                     <div class="campo-detalhe">
                         <label>Id:</label>
-                        <input type="text" id="popupId" value="CH-2024-00158">
+                        <input type="text" id="popupId">
                     </div>
                     <div class="campo-detalhe">
                         <label>Setor:</label>
-                        <input type="text" id="popupSetor" value="Financeiro">
+                        <input type="text" id="popupSetor">
                     </div>
                     <div class="campo-detalhe">
                         <label>Data:</label>
-                        <input type="text" id="popupData" value="15/03/2024">
+                        <input type="text" id="popupData">
                     </div>
                     <div class="campo-detalhe">
                         <label>Descrição:</label>
-                        <textarea
-                            id="popupDescricao">Internet lenta e instável durante todo o dia, impossibilitando o acesso aos sistemas corporativos.</textarea>
+                        <textarea id="popupDescricao"></textarea>
                     </div>
                 </div>
                 <div class="campofotoAdmin">
@@ -365,24 +364,23 @@
             });
         }
 
-        // --- FUNÇÃO DE DETALHES DO CHAMADO (POPUP) ---
 
         async function abrirPopupChamado(idChamado) {
             const chamadoPopupOverlay = document.getElementById('chamadoPopupOverlay');
             const previewContainer = document.getElementById("imagensPreviewPopup");
+            const userId = localStorage.getItem("userId");
 
             previewContainer.innerHTML = 'Carregando detalhes...';
             chamadoPopupOverlay.style.display = 'flex';
 
             try {
-                const response = await fetch(`${API_URL}/getDetalhesChamado?idChamado=${idChamado}`);
+                const response = await fetch(`${API_URL}/getDetalhesChamado?idChamado=${idChamado}&idUserSession=${userId}`);
                 if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
                 const data = await response.json();
 
                 if (data.success && data.data) {
                     const c = data.data;
 
-                    // 1. Preenche os campos do Popup
                     document.getElementById('popupTipoServico').value = c.tipo || '';
                     document.getElementById('popupSolicitante').value = c.nome || '';
                     document.getElementById('popupNumero').value = c.numero || '';
@@ -391,7 +389,6 @@
                     document.getElementById('popupData').value = formatarDataChamado(c.data);
                     document.getElementById('popupDescricao').value = c.descricao || '';
 
-                    // 2. Renderiza as Imagens (Base64)
                     previewContainer.innerHTML = '';
                     let imagensEncontradas = 0;
 
@@ -400,7 +397,7 @@
 
                         if (imagemBase64) {
                             const src = `data:image/png;base64,${imagemBase64}`;
-                            const preview = criarPreview(src, false); // Não removível
+                            const preview = criarPreview(src, false);
                             previewContainer.appendChild(preview);
                             imagensEncontradas++;
                         }
@@ -452,7 +449,6 @@
             formData.append('setor', setor);
             formData.append('descricao', description);
 
-            // Usar os arquivos armazenados no array global
             for (let i = 0; i < uploadedFilesForm.length && i < 6; i++) {
                 formData.append("fotos[]", uploadedFilesForm[i]);
             }

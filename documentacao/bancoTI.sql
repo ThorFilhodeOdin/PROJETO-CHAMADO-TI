@@ -13,7 +13,7 @@ VALUES
 
 DELETE FROM chamados WHERE id_chamado = 21; 
 
-DROP TABLE chamados;
+DROP TABLE users;
 
 ALTER TABLE users
 ADD telefone VARCHAR(15);
@@ -28,7 +28,7 @@ CREATE TABLE users (
     'ACRILICO',
     'ADMINISTRATIVO',
     'ALMOXARIFADO',
-    'ALMOXARIFADO_FERRAGENS',
+    'FERRAGENS',
     'COMERCIAL',
     'COMPRAS',
     'ELETRICA',

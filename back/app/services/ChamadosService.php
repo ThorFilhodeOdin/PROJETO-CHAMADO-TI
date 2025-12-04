@@ -434,7 +434,6 @@ class ChamadosService
                 return $check; // retorna erro se não for admin
             }
 
-            // Busca o chamado pelo idChamado
             $idChamado = $dadosUserRequest['idChamado'] ?? null;
             if (!$idChamado) {
                 return [

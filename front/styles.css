@@ -1034,7 +1034,6 @@ h3 {
   display: grid;
   grid-template-columns: 2fr 1fr;
   /* esquerda maior, direita menor */
-  gap: 30px;
   align-items: start;
 }
 
@@ -1072,7 +1071,7 @@ h3 {
   width: 1300px;
   height: 550px;
   position: relative;
-  overflow-y: auto;
+  overflow-y: none;
 }
 
 .popup-detalhes-chamado h3 {
@@ -1089,6 +1088,7 @@ h3 {
   /* cada campo ocupa no mínimo 300px e distribui igualmente */
   gap: 15px 30px;
   /* vertical 15px, horizontal 30px */
+  margin-right: 25px;
   background: #f8f9fa;
   border-radius: 12px;
   padding: 20px;
