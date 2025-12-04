@@ -73,7 +73,7 @@
                     </div>
                     <div class="campo-detalhe">
                         <label>Id:</label>
-                        <input type="text" id="popupId">
+                        <input type="text" id="popupId" readonly>
                     </div>
                     <div class="campo-detalhe">
                         <label>Setor:</label>
@@ -407,6 +407,9 @@
                         previewContainer.innerHTML = '<p>Nenhuma imagem anexada.</p>';
                     }
 
+                    // Configurar interface baseado no status
+                    configurarInterfacePopup(c.status || 'aberto', c.id_chamado);
+
                 } else {
                     alert(`Erro ao carregar chamado: ${data.message || 'Dados inválidos.'}`);
                     chamadoPopupOverlay.style.display = 'none';
@@ -418,6 +421,232 @@
             }
         }
 
+        function setupConfirmationButton(button, defaultText, confirmText, defaultColor, confirmColor, actionCallback) {
+            if (!button) return;
+
+            button.textContent = defaultText;
+            button.style.backgroundColor = defaultColor || '';
+            button.classList.remove('confirm-action');
+
+            if (button._resetTimer) clearTimeout(button._resetTimer);
+
+            button.onclick = function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (button.classList.contains('confirm-action')) {
+                    actionCallback();
+
+                    button.classList.remove('confirm-action');
+                    button.textContent = defaultText;
+                    button.style.backgroundColor = defaultColor || '';
+                    if (button._resetTimer) clearTimeout(button._resetTimer);
+                } else {
+                    button.classList.add('confirm-action');
+                    button.textContent = confirmText;
+                    button.style.backgroundColor = confirmColor;
+
+                    button._resetTimer = setTimeout(() => {
+                        button.classList.remove('confirm-action');
+                        button.textContent = defaultText;
+                        button.style.backgroundColor = defaultColor || '';
+                    }, 3000);
+                }
+            };
+        }
+
+        function configurarInterfacePopup(status, idChamado) {
+            const isFinalizado = (status || '').toLowerCase() === 'finalizado';
+            const uploadAreaPopup = document.getElementById('uploadAreaPopup');
+            const fileInputPopup = document.getElementById('fileInputPopup');
+            const btnFinalizar = document.getElementById('finalizarChamadoBtn');
+            const btnEditar = document.getElementById('editarChamadoBtn');
+            const btnDeletar = document.querySelector('#chamadoPopupOverlay .submit-btnAdmin.deletar');
+
+            const camposEditaveis = [
+                '#popupTipoServico', '#popupSolicitante', '#popupNumero',
+                '#popupSetor', '#popupData', '#popupDescricao'
+            ];
+
+            camposEditaveis.forEach(selector => {
+                const campo = document.querySelector(selector);
+                if (campo) {
+                    campo.disabled = isFinalizado;
+                }
+            });
+
+            if (uploadAreaPopup) {
+                uploadAreaPopup.style.pointerEvents = isFinalizado ? 'none' : 'auto';
+                uploadAreaPopup.style.opacity = isFinalizado ? '0.6' : '1';
+            }
+            if (fileInputPopup) {
+                fileInputPopup.disabled = isFinalizado;
+            }
+
+            // Configurar botão Finalizar/Reabrir
+            if (btnFinalizar) {
+                if (isFinalizado) {
+                    btnFinalizar.classList.remove('finalizar-btn');
+                    btnFinalizar.classList.add('reabrir-btn');
+
+                    setupConfirmationButton(
+                        btnFinalizar,
+                        'Reabrir Chamado',
+                        'Confirmar',
+                        '',
+                        '#ffc107',
+                        () => reabrirChamadoPopup(idChamado)
+                    );
+                } else {
+                    btnFinalizar.classList.remove('reabrir-btn');
+                    btnFinalizar.classList.add('finalizar-btn');
+
+                    setupConfirmationButton(
+                        btnFinalizar,
+                        '✅ Finalizar',
+                        'Confirmar',
+                        '',
+                        '#28a745',
+                        () => finalizarChamadoPopup(idChamado)
+                    );
+                }
+            }
+
+            // Configurar botão Salvar (só aparece se aberto)
+            if (btnEditar) {
+                if (isFinalizado) {
+                    btnEditar.style.display = 'none';
+                } else {
+                    btnEditar.style.display = 'block';
+                    setupConfirmationButton(
+                        btnEditar,
+                        '💾 Salvar alterações',
+                        'Confirmar',
+                        '',
+                        '#007bff',
+                         'font-size: 16px',
+                        () => salvarAlteracoesChamado(idChamado)
+                    );
+                }
+            }
+
+            // Configurar botão Deletar (sempre visível)
+            if (btnDeletar) {
+                setupConfirmationButton(
+                    btnDeletar,
+                    '🗑️ Deletar',
+                    'Confirmar',
+                    '',
+                    '#dc3545',
+                    () => deletarChamadoPopup(idChamado)
+                );
+            }
+        }
+
+        async function reabrirChamadoPopup(idChamado) {
+            try {
+                const userId = localStorage.getItem("userId");
+                const formData = new FormData();
+                formData.append('idUser', userId);
+                formData.append('idChamado', idChamado);
+
+                const response = await fetch(`${API_URL}/reabrirChamadoAdmin`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('✅ Chamado reaberto com sucesso!');
+                    document.getElementById('chamadoPopupOverlay').style.display = 'none';
+                    CarregarTodosChamadosTi(userId);
+                } else {
+                    alert('❌ Erro: ' + (data.message || 'Falha ao reabrir'));
+                }
+            } catch (error) {
+                console.error('Erro ao reabrir chamado:', error);
+                alert('❌ Erro ao reabrir chamado');
+            }
+        }
+
+        async function finalizarChamadoPopup(idChamado) {
+            try {
+                const userId = localStorage.getItem("userId");
+                const formData = new FormData();
+                formData.append('idUser', userId);
+                formData.append('idChamado', idChamado);
+
+                const response = await fetch(`${API_URL}/finalizarChamadoAdmin`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('✅ Chamado finalizado com sucesso!');
+                    document.getElementById('chamadoPopupOverlay').style.display = 'none';
+                    CarregarTodosChamadosTi(userId);
+                } else {
+                    alert('❌ Erro: ' + (data.message || 'Falha ao finalizar'));
+                }
+            } catch (error) {
+                console.error('Erro ao finalizar chamado:', error);
+                alert('❌ Erro ao finalizar chamado');
+            }
+        }
+
+        async function salvarAlteracoesChamado(idChamado) {
+            try {
+                const userId = localStorage.getItem("userId");
+                const formData = new FormData();
+                formData.append('idUser', userId);
+                formData.append('idChamado', idChamado);
+                formData.append('callType', document.getElementById('popupTipoServico').value);
+                formData.append('nomeUsuario', document.getElementById('popupSolicitante').value);
+                formData.append('numeroChamado', document.getElementById('popupNumero').value);
+                formData.append('setor', document.getElementById('popupSetor').value);
+                formData.append('dataChamado', document.getElementById('popupData').value);
+                formData.append('description', document.getElementById('popupDescricao').value);
+
+                const response = await fetch(`${API_URL}/updateChamadoAbertoAdmin`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('✅ Alterações salvas com sucesso!');
+                    document.getElementById('chamadoPopupOverlay').style.display = 'none';
+                    CarregarTodosChamadosTi(userId);
+                } else {
+                    alert('❌ Erro: ' + (data.message || 'Falha ao salvar'));
+                }
+            } catch (error) {
+                console.error('Erro ao salvar alterações:', error);
+                alert('❌ Erro ao salvar alterações');
+            }
+        }
+
+        async function deletarChamadoPopup(idChamado) {
+            try {
+                const userId = localStorage.getItem("userId");
+                const response = await fetch(`${API_URL}/deleteChamado?idChamado=${idChamado}&idUserSession=${userId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('✅ Chamado deletado com sucesso!');
+                    document.getElementById('chamadoPopupOverlay').style.display = 'none';
+                    CarregarTodosChamadosTi(userId);
+                } else {
+                    alert('❌ Erro: ' + (data.message || 'Falha ao deletar'));
+                }
+            } catch (error) {
+                console.error('Erro ao deletar chamado:', error);
+                alert('❌ Erro ao deletar chamado');
+            }
+        }
 
 
         async function abrirNovoChamado(event) {
@@ -817,9 +1046,19 @@
             gap: 10px;
             margin-top: 20px;
             right: -200px;
+            
         }
 
-
+        .submit-btnAdmin {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            width: 180px;
+            transition: all 0.3s ease;
+        }
 
         button.submit-btn {
             background: #002855;
@@ -856,6 +1095,7 @@
         .call-listAdmin .call-itemAdmin span:nth-child(1) {
             flex: 0 0 50px;
         }
+
         .call-listAdmin .call-itemAdmin span:nth-child(2) {
             flex: 0 0 120px;
         }

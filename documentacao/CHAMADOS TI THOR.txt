@@ -157,7 +157,6 @@ secsistemas37666451829369Rr@
 
 
 
-
 8 dominio(visoluxti) e hostigator
 
 
@@ -168,9 +167,8 @@ secsistemas37666451829369Rr@
 
 *ligar apis com display da pg / teste local com server php e bc local
          -pg abrir chamados
-                popup ediçao
-          -pg chamados 
-                filtro de ti 
+                popup ediçao(btn finalizar e btn salvar e nao edita img e css)
+                
 
 
 
@@ -190,6 +188,9 @@ NO FRONT END, para ofuscament de endpoints:
 ✔️ Hashing de arquivos
 ✔️ Otimização automática
 
+revisao geral
+
+implanta melhoria fotos
 
 
 
