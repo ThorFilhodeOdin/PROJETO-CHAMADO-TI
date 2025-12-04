@@ -207,8 +207,7 @@
 
 
     <script>
-        document.body.style.zoom = "100%";
-
+        document.body.style.zoom = "90%";
         const API_URL = 'http://localhost:8001/api';
         let todosUsuarios = []; // Armazena a lista completa de usuários
         const formEditarUser = document.getElementById("formEditarUser");
@@ -691,6 +690,22 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: flex-start;
+
+        }
+
+        footer {
+            background: #002855;
+            color: white;
+            text-align: center;
+            padding: 22px 0;
+            font-size: 0.9em;
+            box-shadow: 0 -4px 8px rgba(240, 83, 130, 0.616);
+            margin-top: auto;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
         }
     </style>
 

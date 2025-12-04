@@ -1346,7 +1346,7 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 350px;
+  max-height: 420px;
   /* LIMITADOR */
   overflow-y: auto;
   /* SCROLL interno */
@@ -1368,7 +1368,7 @@ h3 {
 }
 
 .call-itemUserAdmin:hover {
-  background: #ffffff;
+  background: #b9b9b9;
   /* cor mais viva */
   transform: translateY(-1px);
   /* levanta o botão */
