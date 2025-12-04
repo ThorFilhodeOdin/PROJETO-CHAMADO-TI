@@ -170,7 +170,7 @@ secsistemas37666451829369Rr@
          -pg abrir chamados
                 popup ediçao
                 abrir chamado(salvando sem foto)
-         
+v
 
 
 
