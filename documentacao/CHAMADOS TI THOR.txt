@@ -156,8 +156,8 @@ secsistemas37666451829369Rr@
 
 
 
+revisao geral -> dominio(visoluxti) e hostigator
 
-8 dominio(visoluxti) e hostigator
 
 
 
@@ -167,7 +167,7 @@ secsistemas37666451829369Rr@
 
 *ligar apis com display da pg / teste local com server php e bc local
          -pg abrir chamados
-                popup ediçao(btn finalizar e btn salvar e nao edita img)
+                popup ediçao(btn salvar, btn refresh e nao edita img)
                 
 
 
@@ -188,14 +188,122 @@ NO FRONT END, para ofuscament de endpoints:
 ✔️ Hashing de arquivos
 ✔️ Otimização automática
 
-revisao geral
-
-implanta melhoria fotos
 
 
+implanta melhoria fotos:
+
+A forma correta, mais segura e mais comum de manipular imagens em um sistema NÃO é salvar a imagem inteira no MySQL como LONGBLOB.
+Até funciona, mas não é o ideal — fica pesado, lento e difícil de escalar.
+
+Vou te explicar a forma profissional de fazer isso, e porque ela é melhor.
+
+✅ Maneira Correta de Manipular Imagens em Sistemas Web
+1. O backend (PHP) recebe o arquivo
+
+Quando o usuário faz upload, o PHP recebe a imagem em $_FILES.
+
+Exemplo simples:
+
+$arquivo = $_FILES['imagem'];
+
+❌ ERRADO (mas funciona): Salvar a imagem inteira no banco
+imagem LONGBLOB
 
 
+Por que é ruim:
 
+Banco cresce rápido e fica lento
+
+Backup/exportação fica gigantesco
+
+Rede fica mais lenta, pois a imagem trafega junto com a query
+
+Dificulta cache no front
+
+Difícil servir em CDN futuramente
+
+✅ CERTO: Salvar no servidor e guardar só o caminho no MySQL
+Fluxo correto
+
+Upload → PHP salva o arquivo na pasta (ex: uploads/)
+
+Banco armazena apenas o path (ex: /uploads/foto_123.jpg)
+
+Front acessa a URL normalmente <img src="/uploads/foto_123.jpg">
+
+Exemplo PHP
+$arquivo = $_FILES['imagem'];
+
+$nome = uniqid() . "-" . $arquivo['name'];
+$caminho = "uploads/" . $nome;
+
+move_uploaded_file($arquivo['tmp_name'], $caminho);
+
+// Salvar no banco só o caminho
+$stmt = $pdo->prepare("INSERT INTO usuarios (foto) VALUES (?)");
+$stmt->execute([$caminho]);
+
+🎯 Por que essa forma é a mais usada?
+✔ Muito mais rápido
+
+Imagens não ficam dentro do banco, deixando ele leve.
+
+✔ Melhor para escalar
+
+Futuramente você pode mover a pasta para:
+
+Amazon S3
+
+Google Cloud Storage
+
+CDN
+
+E nada muda no código.
+
+✔ Fácil de exibir no frontend
+
+Só usar:
+
+<img src="<?= $row['foto'] ?>">
+
+📦 Como transportar para o back-end?
+
+Você envia a imagem com:
+
+const formData = new FormData();
+formData.append("imagem", input.files[0]);
+
+fetch("/upload.php", {
+  method: "POST",
+  body: formData
+});
+
+
+Backend recebe via $_FILES, não via base64.
+
+❓ Então quando usar LONGBLOB?
+
+Somente quando:
+
+Precisa que tudo esteja 100% no banco (raro)
+
+É um arquivo muito pequeno
+
+É algo que não será servido publicamente (ex: assinatura digital)
+
+Para sistemas comuns → não use LONGBLOB.
+
+📌 Resumindo
+Forma	Correto?	Por quê
+Salvar imagem no MySQL (LONGBLOB)	❌ Ruim	Lento, pesado, banco gigante
+Salvar arquivo em pasta e guardar caminho	✅ Ideal	Rápido, padrão do mercado
+Enviar imagem como base64	❌ Ruim	Aumenta tamanho + lento
+Enviar com FormData (arquivo puro)	✅ Correto	Padrão web
+
+Se quiser, te mostro o código completo (upload → salvar → exibir) com segurança (MIME check, renomeação, pasta organizada). 
+
+
+entendi ent compensa salvar numa pasta dentro so sistema ent, ae ela fica la no servidor e o banco so puxa o q tem nessa pasta
 
 
 

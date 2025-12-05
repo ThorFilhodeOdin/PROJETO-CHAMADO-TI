@@ -169,8 +169,10 @@ class ChamadosController
     {
         try {
             header('Content-Type: application/json; charset=utf-8');
+            $dadosParaValidacao = ['id' => $dadosUserRequest];
+
             $idChamado = (int) $idChamado;
-            $result = $this->ChamadosService->finalizarChamadoAdmin($dadosUserRequest, $idChamado);
+            $result = $this->ChamadosService->finalizarChamadoAdmin($dadosParaValidacao, $idChamado);
             echo json_encode($result, JSON_UNESCAPED_UNICODE);
             exit;
         } catch (Exception $e) {

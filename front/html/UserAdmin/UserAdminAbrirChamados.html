@@ -81,7 +81,7 @@
                     </div>
                     <div class="campo-detalhe">
                         <label>Data:</label>
-                        <input type="text" id="popupData">
+                        <input type="date" id="popupData">
                     </div>
                     <div class="campo-detalhe">
                         <label>Descrição:</label>
@@ -321,10 +321,15 @@
         }
 
         function formatarDataChamado(dataStr) {
-            if (!dataStr) return "—";
+            if (!dataStr) return "";
             const data = new Date(dataStr.includes('T') ? dataStr : dataStr + 'T00:00:00');
-            if (isNaN(data.getTime())) return "—";
-            return data.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+            if (isNaN(data.getTime())) return "";
+
+            const year = data.getFullYear();
+            const month = String(data.getMonth() + 1).padStart(2, '0');
+            const day = String(data.getDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
         }
 
         function renderizarTodosChamados(chamados) {
@@ -494,7 +499,7 @@
                         'Reabrir Chamado',
                         'Confirmar',
                         '',
-                        '#ffc107',
+                        '#007bff',
                         () => reabrirChamadoPopup(idChamado)
                     );
                 } else {
@@ -600,12 +605,13 @@
                 const formData = new FormData();
                 formData.append('idUser', userId);
                 formData.append('idChamado', idChamado);
-                formData.append('callType', document.getElementById('popupTipoServico').value);
-                formData.append('nomeUsuario', document.getElementById('popupSolicitante').value);
-                formData.append('numeroChamado', document.getElementById('popupNumero').value);
+                formData.append('tipo', document.getElementById('popupTipoServico').value);
+                formData.append('nome', document.getElementById('popupSolicitante').value);
+                formData.append('numero', document.getElementById('popupNumero').value);
                 formData.append('setor', document.getElementById('popupSetor').value);
-                formData.append('dataChamado', document.getElementById('popupData').value);
-                formData.append('description', document.getElementById('popupDescricao').value);
+                formData.append('data', document.getElementById('popupData').value);
+                formData.append('descricao', document.getElementById('popupDescricao').value);
+
 
                 const response = await fetch(`${API_URL}/updateChamadoAbertoAdmin`, {
                     method: 'POST',
