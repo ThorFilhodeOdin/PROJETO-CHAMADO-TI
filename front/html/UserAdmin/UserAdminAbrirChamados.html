@@ -60,8 +60,25 @@
                 <div class="info-chamado-content">
 
                     <div class="campo-detalhe">
-                        <label>Tipo:</label>
-                        <input type="text" id="popupTipoServico">
+                        <label for="popupCallType">Tipo de Chamado:</label>
+                        <select name="popupCallType" id="popupCallType" required>
+                            <option value="" disabled selected>Selecione o tipo de problema</option>
+                            <option value="INTERNET">Internet</option>
+                            <option value="IMPRESSORA">Impressora</option>
+                            <option value="COMPUTADOR">Computador</option>
+                            <option value="SISTEMA">Sistema</option>
+                            <option value="CELULAR">Celular</option>
+                            <option value="MONITOR">Monitor</option>
+                        </select>
+                    </div>
+                    <div class="campo-detalhe">
+                        <label for="popupStatus">Status:</label>
+                        <select name="popupStatus" id="popupStatus" required>
+                            <option value="ABERTO">Aberto</option>
+                            <option value="EM ANDAMENTO">Em Andamento</option>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="FINALIZADO">Finalizado</option>
+                        </select>
                     </div>
                     <div class="campo-detalhe">
                         <label>Nome:</label>
@@ -69,15 +86,46 @@
                     </div>
                     <div class="campo-detalhe">
                         <label>Numero:</label>
-                        <input type="text" id="popupNumero">
+                        <input type="number" id="popupNumero">
                     </div>
                     <div class="campo-detalhe">
                         <label>Id:</label>
                         <input type="text" id="popupId" readonly>
                     </div>
-                    <div class="campo-detalhe">
-                        <label>Setor:</label>
-                        <input type="text" id="popupSetor">
+                    <div class="form-group-setor">
+                        <label for="popupSetor">Setor:</label>
+                        <select id="popupSetor" name="popupSetor" required>
+                            <option value="" disabled selected>Selecione o Setor</option>
+
+                            <option value="TI">TI</option>
+                            <option value="ACRILICO">ACRÍLICO</option>
+                            <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
+                            <option value="ALMOXARIFADO">ALMOXARIFADO</option>
+                            <option value="FERRAGENS">FERRAGENS</option>
+                            <option value="COMERCIAL">COMERCIAL</option>
+                            <option value="COMPRAS">COMPRAS</option>
+                            <option value="ELETRICA">ELÉTRICA</option>
+                            <option value="EMBALAGENS">EMBALAGENS</option>
+                            <option value="EXPEDICAO">EXPEDIÇÃO</option>
+                            <option value="FATURAMENTO">FATURAMENTO</option>
+                            <option value="FINANCEIRO">FINANCEIRO</option>
+                            <option value="FUNILARIA">FUNILARIA</option>
+                            <option value="IMPRESSAO">IMPRESSÃO</option>
+                            <option value="OPERACIONAL">OPERACIONAL</option>
+                            <option value="PCP">PCP</option>
+                            <option value="PELICULA">PELÍCULA</option>
+                            <option value="PINTURA">PINTURA</option>
+                            <option value="PLOTER">PLOTER</option>
+                            <option value="PROCESSOS">PROCESSOS</option>
+                            <option value="PROJETO">PROJETO</option>
+                            <option value="QUALIDADE">QUALIDADE</option>
+                            <option value="RECEPCAO">RECEPÇÃO</option>
+                            <option value="RECORTE">RECORTE</option>
+                            <option value="RH">RH</option>
+                            <option value="SERRALHERIA">SERRALHERIA</option>
+                            <option value="SESMT_OPERACIONAL">SESMT OPERACIONAL</option>
+                            <option value="SEM SETOR">SEM SETOR</option>
+                        </select>
                     </div>
                     <div class="campo-detalhe">
                         <label>Data:</label>
@@ -105,6 +153,7 @@
                 </div>
                 <div class="popup-acoes-chamado">
                     <button type="button" class="submit-btnAdmin deletar">🗑️ Deletar</button>
+                    <button type="button" class="submit-btnAdmin limpar" id="refreshPopupBtn">🔄 Refresh</button>
                     <button class="action-btn finalizar-btn" id="finalizarChamadoBtn">Finalizar</button>
                     <button class="action-btn" id="editarChamadoBtn">Salvar alterações</button>
                 </div>
@@ -257,6 +306,7 @@
         const API_URL = 'http://localhost:8001/api';
         let todosChamados = [];
         let uploadedFilesForm = []; // Array para armazenar arquivos do formulário
+        let uploadedFilesPopup = []; // Array para armazenar arquivos do popup de edição
 
         const modalImagem = document.getElementById("modalImagem");
         const imagemAmpliada = document.getElementById("imagemAmpliada");
@@ -267,6 +317,7 @@
 
         let modalListaAtual = [];
         let modalIndexAtual = 0;
+        let imagensParaDeletar = []; // Array para rastrear imagens existentes a serem deletadas
 
         document.addEventListener("DOMContentLoaded", () => {
             const userId = localStorage.getItem("userId");
@@ -288,9 +339,13 @@
                 uploadArea: document.getElementById("uploadAreaForm"),
                 fileInput: document.getElementById("fileInputForm"),
                 previewContainer: document.getElementById("imagensPreviewForm")
-            });
+            }, uploadedFilesForm);
 
-            ativarModalNoContainer(document.getElementById("imagensPreviewPopup"));
+            iniciarArea({
+                uploadArea: document.getElementById("uploadAreaPopup"),
+                fileInput: document.getElementById("fileInputPopup"),
+                previewContainer: document.getElementById("imagensPreviewPopup")
+            }, uploadedFilesPopup);
 
 
             if (fecharModal) fecharModal.onclick = fecharModalFunc;
@@ -375,6 +430,10 @@
             const previewContainer = document.getElementById("imagensPreviewPopup");
             const userId = localStorage.getItem("userId");
 
+            // Limpar array de arquivos do popup
+            // Limpar array de arquivos do popup
+            uploadedFilesPopup.length = 0;
+
             previewContainer.innerHTML = 'Carregando detalhes...';
             chamadoPopupOverlay.style.display = 'flex';
 
@@ -386,7 +445,10 @@
                 if (data.success && data.data) {
                     const c = data.data;
 
-                    document.getElementById('popupTipoServico').value = c.tipo || '';
+
+
+                    document.getElementById('popupCallType').value = (c.tipo || '').toUpperCase();
+                    document.getElementById('popupStatus').value = (c.status || 'ABERTO').toUpperCase();
                     document.getElementById('popupSolicitante').value = c.nome || '';
                     document.getElementById('popupNumero').value = c.numero || '';
                     document.getElementById('popupId').value = '#' + c.id_chamado;
@@ -395,21 +457,20 @@
                     document.getElementById('popupDescricao').value = c.descricao || '';
 
                     previewContainer.innerHTML = '';
+                    imagensParaDeletar = []; // Limpar array de imagens para deletar
                     let imagensEncontradas = 0;
 
                     for (let i = 1; i <= 6; i++) {
                         const imagemBase64 = c[`imagem${i}`];
 
                         if (imagemBase64) {
-                            const src = `data:image/png;base64,${imagemBase64}`;
-                            const preview = criarPreview(src, false);
-                            previewContainer.appendChild(preview);
+                            const div = document.createElement("div");
+                            div.className = "imagem-preview-item";
+                            div.setAttribute('data-base64', imagemBase64);
+                            div.innerHTML = `<img src="data:image/jpeg;base64,${imagemBase64}"><button type="button" class="remover-imagem">×</button>`;
+                            previewContainer.appendChild(div);
                             imagensEncontradas++;
                         }
-                    }
-
-                    if (imagensEncontradas === 0) {
-                        previewContainer.innerHTML = '<p>Nenhuma imagem anexada.</p>';
                     }
 
                     // Configurar interface baseado no status
@@ -469,7 +530,7 @@
             const btnDeletar = document.querySelector('#chamadoPopupOverlay .submit-btnAdmin.deletar');
 
             const camposEditaveis = [
-                '#popupTipoServico', '#popupSolicitante', '#popupNumero',
+                '#popupCallType', '#popupStatus', '#popupSolicitante', '#popupNumero',
                 '#popupSetor', '#popupData', '#popupDescricao'
             ];
 
@@ -545,6 +606,35 @@
                     () => deletarChamadoPopup(idChamado)
                 );
             }
+
+            // Configurar botões de remoção de imagens
+            const previewContainer = document.getElementById("imagensPreviewPopup");
+            if (previewContainer) {
+                if (isFinalizado) {
+                    previewContainer.querySelectorAll(".remover-imagem").forEach(btn => btn.style.display = 'none');
+                } else {
+                    previewContainer.querySelectorAll(".remover-imagem").forEach(btn => {
+                        btn.style.display = 'block';
+                        btn.onclick = () => {
+                            const divPai = btn.parentElement;
+                            const base64Src = divPai.getAttribute('data-base64');
+
+                            if (base64Src && !imagensParaDeletar.includes(base64Src)) {
+                                imagensParaDeletar.push(base64Src);
+                            }
+                            divPai.remove();
+                        };
+                    });
+                }
+            }
+
+            // Configurar botão Refresh
+            const btnRefreshPopup = document.getElementById('refreshPopupBtn');
+            if (btnRefreshPopup) {
+                btnRefreshPopup.onclick = () => {
+                    abrirPopupChamado(idChamado);
+                };
+            }
         }
 
         async function reabrirChamadoPopup(idChamado) {
@@ -605,12 +695,24 @@
                 const formData = new FormData();
                 formData.append('idUser', userId);
                 formData.append('idChamado', idChamado);
-                formData.append('tipo', document.getElementById('popupTipoServico').value);
-                formData.append('nome', document.getElementById('popupSolicitante').value);
-                formData.append('numero', document.getElementById('popupNumero').value);
+                formData.append('idChamado', idChamado);
+                formData.append('callType', document.getElementById('popupCallType').value);
+                formData.append('status', document.getElementById('popupStatus').value);
+                formData.append('nomeUsuario', document.getElementById('popupSolicitante').value);
+                formData.append('numeroChamado', document.getElementById('popupNumero').value);
                 formData.append('setor', document.getElementById('popupSetor').value);
-                formData.append('data', document.getElementById('popupData').value);
-                formData.append('descricao', document.getElementById('popupDescricao').value);
+                formData.append('dataChamado', document.getElementById('popupData').value);
+                formData.append('description', document.getElementById('popupDescricao').value);
+
+                // Adicionar fotos do popup
+                for (let i = 0; i < uploadedFilesPopup.length && i < 6; i++) {
+                    formData.append("novasImagens[]", uploadedFilesPopup[i]);
+                }
+
+                // Adicionar imagens para deletar
+                if (imagensParaDeletar.length > 0) {
+                    formData.append('imagensParaDeletar', JSON.stringify(imagensParaDeletar));
+                }
 
 
                 const response = await fetch(`${API_URL}/updateChamadoAbertoAdmin`, {
@@ -621,7 +723,7 @@
                 const data = await response.json();
                 if (data.success) {
                     alert('✅ Alterações salvas com sucesso!');
-                    document.getElementById('chamadoPopupOverlay').style.display = 'none';
+                    // document.getElementById('chamadoPopupOverlay').style.display = 'none';
                     CarregarTodosChamadosTi(userId);
                 } else {
                     alert('❌ Erro: ' + (data.message || 'Falha ao salvar'));
@@ -687,15 +789,6 @@
                 formData.append("fotos[]", uploadedFilesForm[i]);
             }
 
-            console.log("--- Conteúdo do FormData ---");
-            for (const pair of formData.entries()) {
-                if (pair[1] instanceof File) {
-                    console.log(pair[0] + ': ' + 'FILE (Nome: ' + pair[1].name + ', Tipo: ' + pair[1].type + ', Tamanho: ' + pair[1].size + ' bytes)');
-                } else {
-                    console.log(pair[0] + ': ' + pair[1]);
-                }
-            }
-            console.log("----------------------------");
 
             try {
                 const response = await fetch(`${API_URL}/createChamadoAdmin`, {
@@ -709,7 +802,7 @@
                     alert("✅ Chamado aberto com sucesso!");
                     form.reset();
                     previewContainer.innerHTML = '';
-                    uploadedFilesForm = []; // Limpar array de arquivos
+                    uploadedFilesForm.length = 0; // Limpar array de arquivos
                     CarregarTodosChamadosTi(userId);
                 } else {
                     alert(`❌ Erro ao abrir chamado: ${data.message || 'Resposta inválida do servidor.'}`);
@@ -750,7 +843,7 @@
             });
         }
 
-        function iniciarUploadImagens(config) {
+        function iniciarUploadImagens(config, filesArray) {
             const { uploadArea, fileInput, previewContainer } = config;
 
             function processarArquivos(arquivos) {
@@ -766,13 +859,13 @@
                     if (!file.type.startsWith("image/")) return;
 
                     // Armazenar o arquivo no array global
-                    uploadedFilesForm.push(file);
+                    filesArray.push(file);
 
                     const reader = new FileReader();
                     reader.onload = e => {
                         const preview = criarPreview(e.target.result, true);
                         previewContainer.appendChild(preview);
-                        ativarRemocao(previewContainer, uploadedFilesForm);
+                        ativarRemocao(previewContainer, filesArray);
                     };
                     reader.readAsDataURL(file);
                 });
@@ -832,8 +925,8 @@
             });
         }
 
-        function iniciarArea(config) {
-            iniciarUploadImagens(config);
+        function iniciarArea(config, filesArray) {
+            iniciarUploadImagens(config, filesArray);
             ativarModalNoContainer(config.previewContainer);
         }
 
@@ -1038,6 +1131,20 @@
     </script>
 
     <style>
+        .info-chamado-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 0.5fr));
+            /* cada campo ocupa no mínimo 300px e distribui igualmente */
+            margin-top: 40px;
+            box-shadow: 0 4px 20px #002855cb;
+            gap: 15px 30px;
+            /* vertical 15px, horizontal 30px */
+            background: #eeeeee;
+            border-radius: 12px;
+            padding: 20px;
+            align-content: start;
+        }
+
         .upload-areaAdmin {
             width: 90%;
             height: 90px;
@@ -1058,6 +1165,39 @@
             gap: 10px;
             margin-top: 20px;
             right: -200px;
+        }
+
+        .campo-detalhe select {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #949393;
+            font-size: 0.9em;
+            width: 70%;
+            box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.404);
+
+        }
+
+
+
+        .campo-detalhe textarea {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #949393;
+            font-size: 0.9em;
+            width: 180%;
+            box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.404);
+
+        }
+
+
+        .campo-detalhe input {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #949393;
+            font-size: 0.9em;
+            width: 70%;
+            box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.404);
+
         }
 
         .submit-btnAdmin {

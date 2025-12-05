@@ -692,7 +692,28 @@
 
       left: 400px;
     }
+    .detalhes-chamado-content {
+  position: relative;
+gap: 40px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  /* esquerda maior, direita menor */
+  align-items: start;
+}
 
+.info-chamado-content2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* cada campo ocupa no mínimo 300px e distribui igualmente */
+  margin-top: 40px;
+  box-shadow: 0 4px 20px #002855cb;
+  gap: 15px 30px;
+margin-left: 50px ;
+  background: #eeeeee;
+  border-radius: 12px;
+  padding: 20px;
+  align-content: start;
+}
     .call-item {
       display: grid;
       grid-template-columns: 1fr 0.6fr 1.2fr 100px auto;

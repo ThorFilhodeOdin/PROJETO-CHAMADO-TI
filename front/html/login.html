@@ -41,55 +41,70 @@
   </footer>
 
   <script>
-const form = document.getElementById('loginForm');
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const nome = form.nome.value.trim();
-    const senha = form.senha.value.trim();
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nome = form.nome.value.trim();
+      const senha = form.senha.value.trim();
 
-    if (!nome || !senha) {
+      if (!nome || !senha) {
         alert("Preencha todos os campos!");
         return;
-    }
-    try {
+      }
+      try {
         const loginResponse = await fetch("http://localhost:8001/api/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nome, senha }) 
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome, senha })
         });
         const responseText = await loginResponse.text();
         if (!loginResponse.ok) {
-            console.error("Erro HTTP:", loginResponse.status);
-            alert("Credenciais inválidas.");
-            return;
+          console.error("Erro HTTP:", loginResponse.status);
+          alert("Credenciais inválidas.");
+          return;
         }
         let loginData;
         try {
-            loginData = JSON.parse(responseText);
+          loginData = JSON.parse(responseText);
         } catch (parseError) {
-            console.error("Erro ao parsear JSON:", parseError);
-            alert("Resposta inválida do servidor");
-            return;
+          console.error("Erro ao parsear JSON:", parseError);
+          alert("Resposta inválida do servidor");
+          return;
         }
         ///IMPLEMENTAR LOGICA DE BLOQUEIO DE PAGINA COM VALIDARADMINEXIBIÇAO USER = valida se quem quer acessar a pg tem id  e se for user blz, endpoints ja sao verifcados por validaçao de id admin e existencia de id comum
         if (loginData.success) {
-              localStorage.setItem("userId", loginData.id);
+          localStorage.setItem("userId", loginData.id);
 
-            if (loginData.isAdmin) {
-                window.location.href = "../html/UserAdmin/UserAdminChamados.html";
-            } else {
-                window.location.href = "../html/UserComum/UserComumAbrirChamado.html";
-            }
+          if (loginData.isAdmin) {
+            window.location.href = "../html/UserAdmin/UserAdminChamados.html";
+          } else {
+            window.location.href = "../html/UserComum/UserComumAbrirChamado.html";
+          }
         } else {
-            alert("Credenciais inválidas.");
+          alert("Credenciais inválidas.");
         }
 
-    } catch (error) {
+      } catch (error) {
         console.error("Erro na comunicação com o servidor:", error);
         alert("Erro ao conectar ao servidor.");
-    }
-});
+      }
+    });
   </script>
+  <style>
+    header {
+      background-color: #002855;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 28px;
+      box-shadow: 0 4px 8px rgba(240, 83, 130, 0.6);
+      position: relative;
+      z-index: 10;
+  height: 80px;
+    }
+  </style>
 </body>
 <script src="../js/urls-amigaveis.js"></script>
+
 </html>
