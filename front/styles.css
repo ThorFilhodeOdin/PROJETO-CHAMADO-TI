@@ -1067,9 +1067,10 @@ h3 {
   background: white;
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.637);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.575);
   width: 1300px;
-  height: 550px;
+  height: 560px;
   position: relative;
   overflow-y: none;
 }
@@ -1084,7 +1085,7 @@ h3 {
 
 .info-chamado-content {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   /* cada campo ocupa no mínimo 300px e distribui igualmente */
   gap: 15px 30px;
   /* vertical 15px, horizontal 30px */
@@ -1099,13 +1100,22 @@ h3 {
 .campo-detalhe {
   display: flex;
   flex-direction: column;
-  /* label em cima do input */
+ 
   gap: 5px;
 }
 
-.campo-detalhe input,
+.campo-detalhe input {
+  width: 60%;
+  /* ocupa toda a largura da célula do grid */
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+}
+
 .campo-detalhe textarea {
-  width: 100%;
+  width: 130%;
   /* ocupa toda a largura da célula do grid */
   padding: 8px 12px;
   border: 1px solid #d1d5db;
@@ -1138,7 +1148,7 @@ h3 {
 .campo-detalhe label {
   font-weight: 600;
   color: #2d3748;
-  font-size: 14px;
+  font-size: 16px;
   margin: 0;
   padding-top: 2px;
 }

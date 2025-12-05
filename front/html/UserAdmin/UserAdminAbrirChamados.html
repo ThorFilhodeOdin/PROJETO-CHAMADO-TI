@@ -524,7 +524,6 @@
                         'Confirmar',
                         '',
                         '#007bff',
-                         'font-size: 16px',
                         () => salvarAlteracoesChamado(idChamado)
                     );
                 }
@@ -1023,6 +1022,13 @@
                 if (chamadoPopupOverlay) chamadoPopupOverlay.style.display = 'none';
             });
         }
+        if (chamadoPopupOverlay) {
+            window.addEventListener('click', (e) => {
+                if (e.target === chamadoPopupOverlay) {
+                    chamadoPopupOverlay.style.display = 'none';
+                }
+            });
+        }
     </script>
 
     <style>
@@ -1046,7 +1052,6 @@
             gap: 10px;
             margin-top: 20px;
             right: -200px;
-            
         }
 
         .submit-btnAdmin {
