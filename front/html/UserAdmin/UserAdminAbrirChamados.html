@@ -71,26 +71,27 @@
                             <option value="MONITOR">Monitor</option>
                         </select>
                     </div>
+
+
                     <div class="campo-detalhe">
-                        <label for="popupStatus">Status:</label>
-                        <select name="popupStatus" id="popupStatus" required>
-                            <option value="ABERTO">Aberto</option>
-                            <option value="EM ANDAMENTO">Em Andamento</option>
-                            <option value="PENDENTE">Pendente</option>
-                            <option value="FINALIZADO">Finalizado</option>
-                        </select>
+                        <label>Id:</label>
+                        <input type="text" id="popupId" readonly>
+                    </div>
+
+                    <div class="campo-detalhe">
+                        <label>Data:</label>
+                        <input type="date" id="popupData">
                     </div>
                     <div class="campo-detalhe">
                         <label>Nome:</label>
                         <input type="text" id="popupSolicitante">
                     </div>
                     <div class="campo-detalhe">
-                        <label>Numero:</label>
-                        <input type="number" id="popupNumero">
-                    </div>
-                    <div class="campo-detalhe">
-                        <label>Id:</label>
-                        <input type="text" id="popupId" readonly>
+                        <label for="popupStatus">Status:</label>
+                        <select name="popupStatus" id="popupStatus" required>
+                            <option value="ABERTO">Aberto</option>
+                            <option value="FINALIZADO">Finalizado</option>
+                        </select>
                     </div>
                     <div class="form-group-setor">
                         <label for="popupSetor">Setor:</label>
@@ -127,9 +128,12 @@
                             <option value="SEM SETOR">SEM SETOR</option>
                         </select>
                     </div>
+
+
+
                     <div class="campo-detalhe">
-                        <label>Data:</label>
-                        <input type="date" id="popupData">
+                        <label>Numero:</label>
+                        <input type="number" id="popupNumero">
                     </div>
                     <div class="campo-detalhe">
                         <label>Descrição:</label>
@@ -652,8 +656,9 @@
                 const data = await response.json();
                 if (data.success) {
                     alert('✅ Chamado reaberto com sucesso!');
-                    document.getElementById('chamadoPopupOverlay').style.display = 'none';
+                    // document.getElementById('chamadoPopupOverlay').style.display = 'none';
                     CarregarTodosChamadosTi(userId);
+                    abrirPopupChamado(idChamado);
                 } else {
                     alert('❌ Erro: ' + (data.message || 'Falha ao reabrir'));
                 }
@@ -678,8 +683,8 @@
                 const data = await response.json();
                 if (data.success) {
                     alert('✅ Chamado finalizado com sucesso!');
-                    document.getElementById('chamadoPopupOverlay').style.display = 'none';
                     CarregarTodosChamadosTi(userId);
+                    abrirPopupChamado(idChamado);
                 } else {
                     alert('❌ Erro: ' + (data.message || 'Falha ao finalizar'));
                 }
@@ -1137,7 +1142,7 @@
             /* cada campo ocupa no mínimo 300px e distribui igualmente */
             margin-top: 40px;
             box-shadow: 0 4px 20px #002855cb;
-            gap: 15px 30px;
+            gap: 15px 0px;
             /* vertical 15px, horizontal 30px */
             background: #eeeeee;
             border-radius: 12px;
@@ -1163,7 +1168,7 @@
             display: flex;
             justify-content: space-between;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 40px;
             right: -200px;
         }
 

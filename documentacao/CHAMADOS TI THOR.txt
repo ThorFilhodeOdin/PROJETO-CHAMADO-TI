@@ -166,8 +166,6 @@ revisao geral -> dominio(visoluxti) e hostigator
 
 
 *ligar apis com display da pg / teste local com server php e bc local
-         -pg abrir chamados
-                popup ediçao(nao edita img)
                 
 
 
