@@ -162,19 +162,22 @@ revisao geral -> dominio(visoluxti) e hostigator
 
 
 
-
-
-
-*ligar apis com display da pg / teste local com server php e bc local
                 
 
 
 
 
-
-
-
 IMPLEMENTAR LOGICA DE BLOQUEIO DE PAGINA COM VALIDARADMINEXIBIÇAO USER = valida se quem quer acessar a pg tem id  e se for admin, endpoints ja sao verifcados internamente por validaçao de id admin e existencia de id comum
+
+
+
+
+
+
+
+
+
+
 
 criar escapes contra xss
 
@@ -192,116 +195,277 @@ implanta melhoria fotos:
 
 A forma correta, mais segura e mais comum de manipular imagens em um sistema NÃO é salvar a imagem inteira no MySQL como LONGBLOB.
 Até funciona, mas não é o ideal — fica pesado, lento e difícil de escalar.
-
 Vou te explicar a forma profissional de fazer isso, e porque ela é melhor.
-
 ✅ Maneira Correta de Manipular Imagens em Sistemas Web
 1. O backend (PHP) recebe o arquivo
-
 Quando o usuário faz upload, o PHP recebe a imagem em $_FILES.
-
 Exemplo simples:
-
 $arquivo = $_FILES['imagem'];
-
 ❌ ERRADO (mas funciona): Salvar a imagem inteira no banco
 imagem LONGBLOB
-
-
 Por que é ruim:
-
 Banco cresce rápido e fica lento
-
 Backup/exportação fica gigantesco
-
 Rede fica mais lenta, pois a imagem trafega junto com a query
-
 Dificulta cache no front
-
 Difícil servir em CDN futuramente
-
 ✅ CERTO: Salvar no servidor e guardar só o caminho no MySQL
 Fluxo correto
-
 Upload → PHP salva o arquivo na pasta (ex: uploads/)
-
 Banco armazena apenas o path (ex: /uploads/foto_123.jpg)
-
 Front acessa a URL normalmente <img src="/uploads/foto_123.jpg">
-
 Exemplo PHP
 $arquivo = $_FILES['imagem'];
-
 $nome = uniqid() . "-" . $arquivo['name'];
 $caminho = "uploads/" . $nome;
-
 move_uploaded_file($arquivo['tmp_name'], $caminho);
-
 // Salvar no banco só o caminho
 $stmt = $pdo->prepare("INSERT INTO usuarios (foto) VALUES (?)");
 $stmt->execute([$caminho]);
-
 🎯 Por que essa forma é a mais usada?
 ✔ Muito mais rápido
-
 Imagens não ficam dentro do banco, deixando ele leve.
-
 ✔ Melhor para escalar
-
 Futuramente você pode mover a pasta para:
-
 Amazon S3
-
 Google Cloud Storage
-
 CDN
-
 E nada muda no código.
-
 ✔ Fácil de exibir no frontend
-
 Só usar:
-
 <img src="<?= $row['foto'] ?>">
-
 📦 Como transportar para o back-end?
-
 Você envia a imagem com:
-
 const formData = new FormData();
 formData.append("imagem", input.files[0]);
-
 fetch("/upload.php", {
   method: "POST",
   body: formData
 });
-
-
 Backend recebe via $_FILES, não via base64.
-
 ❓ Então quando usar LONGBLOB?
-
 Somente quando:
-
 Precisa que tudo esteja 100% no banco (raro)
-
 É um arquivo muito pequeno
-
 É algo que não será servido publicamente (ex: assinatura digital)
-
 Para sistemas comuns → não use LONGBLOB.
-
 📌 Resumindo
 Forma	Correto?	Por quê
 Salvar imagem no MySQL (LONGBLOB)	❌ Ruim	Lento, pesado, banco gigante
 Salvar arquivo em pasta e guardar caminho	✅ Ideal	Rápido, padrão do mercado
 Enviar imagem como base64	❌ Ruim	Aumenta tamanho + lento
 Enviar com FormData (arquivo puro)	✅ Correto	Padrão web
-
 Se quiser, te mostro o código completo (upload → salvar → exibir) com segurança (MIME check, renomeação, pasta organizada). 
-
-
 entendi ent compensa salvar numa pasta dentro so sistema ent, ae ela fica la no servidor e o banco so puxa o q tem nessa pasta
+
+
+
+
+
+
+
+separar scripst
+
+/projeto
+|-- /css
+|   |-- styles.css (já existe)
+|   |-- chamado.css <--- NOVO
+|-- /js
+|   |-- urls-amigaveis.js (já existe)
+|   |-- chamado.js <--- NOVO
+|-- /paginas
+|   |-- UserComumAbrirChamado.html <--- MODIFICADO
+
+
+// chamado.js
+// O código JavaScript não precisa da tag <script> dentro do arquivo .js
+//PEGAR O ID POS LOGIN
+const userId = localStorage.getItem("userId");
+if (!userId) {
+    window.location.href = "../login.html";
+}
+const userBtn = document.getElementById('userBtn');
+const popupOverlay = document.getElementById('popupOverlay'); //fundo escuro
+const closePopup = document.getElementById('closePopup');
+// ... (resto do seu JavaScript) ...
+//TROCA SENHA E NUMERO
+document.addEventListener('DOMContentLoaded', () => {
+    const alterarUser = document.getElementById('alterarUser');
+    const popupOverlay = document.getElementById('popupOverlay');
+    // Pega o userId do localStorage dentro do DOMContentLoaded
+    const idUser = localStorage.getItem("userId");
+    // ... (resto do código de troca de senha) ...
+});
+// [FIM DO JAVASCRIPT]
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <link rel="icon" type="image/png" href="../../icon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="../../icon/favicon.svg">
+    <link rel="shortcut icon" href="../../icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../icon/apple-touch-icon.png">
+    <link rel="manifest" href="../../icon/site.webmanifest">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chamados - Visolux TI</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet" href="../../css/chamado.css"> 
+</head>
+
+<body>
+
+    <header>
+        <img src="../../img/logo-x.png" alt="Logo da visolux" width="40" height="40" class="logo-img">
+        <div class="logo">VISOLUX TI</div>
+        <button class="user-btn" id="userBtn">
+            <img src="../../img/user.png" alt="Logo do User" class="user-icon">
+        </button>
+    </header>
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popupEditarUserComum">
+            <button class="close-btnX" id="closePopup">X</button>
+            <h3>Editar Usuário</h3>
+            <input type="number" placeholder="Novo Numero">
+            <input type="password" placeholder="Nova senha">
+            <div>
+                <button class="save-btn" id="alterarUser">Salvar</button>
+                <div class="popup-deslogar">
+                    <button class="logout-btn" id="logoutBtn">Encerrar Sessão</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="chamadoPopupOverlay">
+        <div class="popup-detalhes-chamado">
+            <button class="close-btnX" id="closeChamadoPopup">X</button>
+            <div class="detalhes-chamado-content">
+                <div class="info-chamado-content2">
+                    <div class="campo-detalhe">
+                        <label>Tipo:</label>
+                        <input type="text" id="popupTipoServico" value="Internet" readonly>
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Nome:</label>
+                        <input type="text" id="popupSolicitante" value="Carlos Silva" readonly>
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Numero:</label>
+                        <input type="text" id="popupNumero" value="(11) 98765-4321" readonly>
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Id:</label>
+                        <input type="text" id="popupId" value="CH-2024-00158" readonly>
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Setor:</label>
+                        <input type="text" id="popupSetor" value="Financeiro" readonly>
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Data:</label>
+                        <input type="text" id="popupData" value="15/03/2024" readonly>
+                    </div>
+                    <div class="campo-detalhe">
+                        <label>Descrição:</label>
+                        <textarea id="popupDescricao"
+                            readonly>Internet lenta e instável durante todo o dia, impossibilitando o acesso aos sistemas corporativos.</textarea>
+                    </div>
+                </div>
+
+                <div class="campofotoAdmin">
+                    <div>
+                        <label>Fotos (JPG e PNG)</label>
+                        </div>
+                    <div class="imagens-preview" id="imagensPreviewPopup"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <main>
+        <div class="container1" id="yourCalls">
+            <h2>Seus Chamados</h2>
+            <div class="call-list" id="listaChamados">
+            </div>
+        </div>
+
+        <div class="container2" id="openCall">
+            <h2>ABRIR CHAMADO</h2>
+            <form>
+                <div class="campoinfo">
+                    <div>
+                        <label>Tipo de Chamado:</label>
+                        <select name="callType" required>
+                            <option value="" disabled selected>Selecione o tipo de problema</option>
+                            <option value="Internet">Internet</option>
+                            <option value="Impressora">Impressora</option>
+                            <option value="Computador">Computador</option>
+                            <option value="Sistema">Sistema</option>
+                            <option value="Monitor">Celular</option>
+                            <option value="Monitor">Monitor</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Data:</label>
+                        <input type="date" name="date" id="dataChamado" required>
+                    </div>
+                    <div>
+                        <label>Descrição:</label>
+                        <textarea name="description" placeholder="Descreva a situção com detalhes" required></textarea>
+                    </div>
+                </div>
+
+                <div class="campofoto">
+                    <div>
+                        <label>Fotos (JPG e PNG • Máximo 6)</label>
+                        <div class="upload-area" id="uploadAreaForm">
+                            <div class="upload-placeholder">
+                                <span style="color: blue; cursor: pointer;">📁 Arraste imagens aqui ou clique para selecionar</span>
+                                <input type="file" id="fileInputForm" multiple accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="imagens-preview" id="imagensPreviewForm"></div>
+                    </div>
+                </div>
+                <button type="submit" id="criar-chamado" class="submit-btn">Enviar Chamado</button>
+            </form>
+        </div>
+        <div>
+        </div>
+    </main>
+
+    <footer>
+        © 2025 VISOLUX & THOR — Todos os direitos reservados
+    </footer>
+
+
+    <div id="modalImagem" class="modal-imagemAdmin">
+        <span class="fechar-modalAdmin">&times;</span>
+        <div class="modal-navegacaoAdmin">
+            <button class="modal-btn-prev" id="modalPrev">⬅</button>
+            <button class="modal-btn-next" id="modalNext">⮕</button>
+        </div>
+        <div class="modal-contadorAdmin" id="modalContador">1 / 4</div>
+        <img class="conteudo-modalAdmin" id="imagemAmpliada">
+    </div>
+
+    <script src="../../js/chamado.js"></script>
+
+    <script src="../../js/urls-amigaveis.js"></script>
+
+</body>
+
+</html>
+
+
+
 
 
 

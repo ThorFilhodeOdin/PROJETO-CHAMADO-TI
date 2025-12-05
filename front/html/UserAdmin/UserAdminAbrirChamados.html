@@ -453,6 +453,42 @@
 
                     document.getElementById('popupCallType').value = (c.tipo || '').toUpperCase();
                     document.getElementById('popupStatus').value = (c.status || 'ABERTO').toUpperCase();
+
+                    document.getElementById('popupStatus').onchange = function () {
+                        const isFinalizado = this.value === 'FINALIZADO';
+                        const btnFinalizar = document.getElementById('finalizarChamadoBtn');
+                        const btnEditar = document.getElementById('editarChamadoBtn');
+
+                        if (btnEditar) {
+                            btnEditar.style.display = isFinalizado ? 'none' : 'block';
+                        }
+
+                        if (btnFinalizar) {
+                            if (isFinalizado) {
+                                btnFinalizar.classList.remove('finalizar-btn');
+                                btnFinalizar.classList.add('reabrir-btn');
+                                setupConfirmationButton(
+                                    btnFinalizar,
+                                    'Reabrir Chamado',
+                                    'Confirmar',
+                                    '',
+                                    '#007bff',
+                                    () => reabrirChamadoPopup(idChamado)
+                                );
+                            } else {
+                                btnFinalizar.classList.remove('reabrir-btn');
+                                btnFinalizar.classList.add('finalizar-btn');
+                                setupConfirmationButton(
+                                    btnFinalizar,
+                                    '✅ Finalizar',
+                                    'Confirmar',
+                                    '',
+                                    '#28a745',
+                                    () => finalizarChamadoPopup(idChamado)
+                                );
+                            }
+                        }
+                    };
                     document.getElementById('popupSolicitante').value = c.nome || '';
                     document.getElementById('popupNumero').value = c.numero || '';
                     document.getElementById('popupId').value = '#' + c.id_chamado;
